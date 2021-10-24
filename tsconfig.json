@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+      /* Visit https://aka.ms/tsconfig.json to read more about this file */
+      /* Basic Options */
+      "module": "commonjs",
+      "target": "es2020",
+      "strict": true,
+      "moduleResolution": "node",
+      "allowSyntheticDefaultImports": true,
+      "experimentalDecorators": true,
+      "skipLibCheck": true,
+      "outDir": "./src/js",
+      "esModuleInterop": true
+    },
+    "include": [
+      "./src/ts"
+    ]
+  }
+  
