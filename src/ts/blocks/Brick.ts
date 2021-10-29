@@ -1,24 +1,20 @@
 import { Vector2, Vector4 } from "@math.gl/core";
-import C2D from "../helpers/C2D";
-import MathHelper from "../helpers/MathHelper";
+import Collidable from "../interfaces/Collidable";
 
-export default class Brick
+import Block from "./Block";
+
+export default class Brick extends Block implements Collidable
 {
-    public pos : Vector2;
-    public size : Vector2;
-    public color : Vector4;
+    public radius : number;
+    public colVec : Vector2;
 
-    public hexColor : number;
+    public constructor(pos : Vector2, size : Vector2)
+    {  
+        const color = new Vector4(189.0, 195.0, 199.0, 255.0);
 
-    public constructor(pos : Vector2, size : Vector2, color : Vector4) {
-        this.pos = pos;
-        this.size = size;
-        this.color = color;
-        this.hexColor = MathHelper.rgba2Hex(color);
-    }
+        super(pos, size, color);
 
-    public render(context : C2D) : void
-    {        
-        C2D.renderRect(context, this.pos, this.size, this.color);
+        this.radius = this.size.x + this.size.y
+        this.colVec = new Vector2(this.pos.x, this.pos.y);
     }
 }

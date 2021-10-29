@@ -1,4 +1,4 @@
-import { Vector2, Vector3, Vector4 } from "@math.gl/core";
+import { Vector2, Vector4 } from "@math.gl/core";
 import C2D from "../helpers/C2D";
 
 export default interface Renderable {

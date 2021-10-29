@@ -9,7 +9,7 @@ export default class MathHelper {
         return range;
     }
     
-    public static isInRange(number : number, range : Array<number>, negative : boolean = false) : boolean
+    public static isInRange(number : number, range : Array<number>) : boolean
     {
         return number >= range[0] && number <= range[1]; 
     }
