@@ -9,8 +9,6 @@ import Brick from "./blocks/Brick";
 import Wall from "./blocks/Wall";
 import Ground from "./blocks/Ground";
 
-import Player from "./entities/Player";
-
 import Bitmap from "./Bitmap";
 import Pixel from "./Pixel";
 
@@ -23,7 +21,7 @@ export default class Level
 
     private pixels = new Array<Pixel>();
 
-    private context : C2D;
+    public context : C2D;
 
     private bitmap : Bitmap = new Bitmap('../../assets/img/bitmap.png');
 
@@ -75,6 +73,11 @@ export default class Level
 
         return element as Renderable;
     }
+
+    public remove(r : Renderable)
+    {
+        this.renderables = this.renderables.filter((target : Renderable) : boolean => r.pos !== target.pos);
+    }    
 
     public getAllRenderables() : Array<Renderable>
     {

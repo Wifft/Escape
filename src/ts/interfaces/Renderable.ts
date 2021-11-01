@@ -6,9 +6,12 @@ import SpriteSheet from "../SpriteSheet";
 export default interface Renderable {
     pos : Vector2;
     size : Vector2;
+    sPos? : Vector2;
+    sSize? : Vector2;
     color : Vector4;
     hexColor? : number;
     spriteSheet : SpriteSheet
+    img : HTMLImageElement
     
     render(context : C2D) : void
 }

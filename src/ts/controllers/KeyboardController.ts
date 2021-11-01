@@ -46,6 +46,10 @@ export default abstract class KeyboardController {
                 keyCode = PseudoKeyCodes.SPACE_KEY;
 
                 break;
+            case 'KeyE':
+                keyCode = PseudoKeyCodes.E_KEY;
+
+                break;
         }
 
         return keyCode;

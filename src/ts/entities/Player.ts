@@ -11,21 +11,23 @@ import Collider from "../phys/Collider";
 
 import Level from "../Level";
 import SpriteSheet from "../SpriteSheet";
+import Bullet from "./Bullet";
+import Entity from "./Entity";
 
 export default class Player extends KeyboardController implements Renderable {
     public pos : Vector2;
     
     public size : Vector2;
     public color : Vector4;
-    public spriteSheet = new SpriteSheet('../assets/img/player.png');
-
+    public spriteSheet : SpriteSheet = new SpriteSheet('../assets/img/player.png');
+    public img : HTMLImageElement;
     public jumping : boolean = false;
     public falling : boolean = false;
     public grounded : boolean = true;
+    public shooting : boolean = false;
 
     public movingLeft : boolean = false;
     public movingRight : boolean = false;
-    public shooting : boolean = false;
     
     public speed : number = 0.25;
 
@@ -42,6 +44,8 @@ export default class Player extends KeyboardController implements Renderable {
         this.size = size;
         this.color = color;
         this.level = level;
+
+        this.img = this.spriteSheet.load();
     }
 
     public render(context : C2D) : void
@@ -51,11 +55,10 @@ export default class Player extends KeyboardController implements Renderable {
         else if (this.movingRight) spritePos = 64.0;
         else if (this.movingLeft) spritePos = 96.0;
 
-        const img : HTMLImageElement = this.spriteSheet.load();
         const sPos = new Vector2(spritePos, 0.0);
         const sSize = this.size;
 
-        C2D.drawImage(context, img, sPos, sSize, this.pos, this.size);
+        C2D.drawImage(context, this.img, sPos, sSize, this.pos, this.size);
     }
 
     public tick() : void
@@ -103,8 +106,9 @@ export default class Player extends KeyboardController implements Renderable {
         }
         if (this.keysDown[PseudoKeyCodes.A_KEY]) this.pos.x -= this.speed, this.movingLeft = true, this.movingRight = false;
         if (this.keysDown[PseudoKeyCodes.D_KEY]) this.pos.x += this.speed, this.movingLeft = false, this.movingRight = true;
+        if (this.keysDown[PseudoKeyCodes.E_KEY] && !this.shooting) this.tryShoot();
 
-        if (!this.keysDown.find((element : boolean) => element === true)) this.movingLeft = false, this.movingRight = false;
+        if (!this.keysDown.find((element : boolean) => element === true)) this.shooting = false;
     }
 
     private tryJump() : void
@@ -122,5 +126,14 @@ export default class Player extends KeyboardController implements Renderable {
                 this.falling = true;
             }
         }
+    }
+
+    public tryShoot() : void
+    {
+        this.shooting = true;
+
+        const size = new Vector2(16.0, 16.0);
+
+        this.level.add(new Bullet(this.level, this.pos.clone(), size, this.speed, this.movingRight ? 0 : 1));
     }
 }
