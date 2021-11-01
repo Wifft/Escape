@@ -1,21 +1,25 @@
 import { Vector2, Vector4 } from "@math.gl/core";
 import C2D from "../helpers/C2D";
 import MathHelper from "../helpers/MathHelper";
+import Collidable from "../interfaces/Collidable";
 import Renderable from "../interfaces/Renderable";
 
-export default abstract class Block implements Renderable {
+export default abstract class Block implements Renderable, Collidable {
     public pos : Vector2;
     public size : Vector2;
     public color : Vector4;
 
     public hexColor : number;
-    
+
+    public isCollidable : boolean;
+
     public constructor(pos : Vector2, size : Vector2, color : Vector4)
     {
-        this.pos = pos;
+        this.pos = pos.multiplyByScalar(16.0);
         this.size = size;
         this.color = color;
-        this.hexColor = MathHelper.rgba2Hex(color);;
+        this.hexColor = MathHelper.rgba2Hex(color);
+        this.isCollidable = true;
     }
 
     public render(context : C2D) : void

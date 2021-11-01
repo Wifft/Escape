@@ -36,7 +36,7 @@ export default class Level
         this.addBlocks();
         this.add(player);
 
-        console.log(this.collidables);
+        console.log(this.getAllCollidables());
     }
 
     public addBlocks() : void
@@ -47,15 +47,15 @@ export default class Level
                     (p : Pixel) : void => {
                         switch (p.colorHex) {
                             case 0xff0000ff:
-                                this.add(new Brick(p.pos.multiplyByScalar(16), new Vector2(16.0, 16.0)));
-                                
+                                this.add(new Brick(p.pos, new Vector2(16.0, 16.0)));
+
                                 break;
                             case 0x00ff00ff:
-                                this.add(new Ground(p.pos.multiplyByScalar(16), new Vector2(16.0, 16.0)));
+                                this.add(new Ground(p.pos, new Vector2(16.0, 16.0)));
                                 
                                 break;
                             case 0x0000ffff:
-                                this.add(new Wall(p.pos.multiplyByScalar(16), new Vector2(16.0, 16.0)));
+                                this.add(new Wall(p.pos, new Vector2(16.0, 16.0)));
                                 
                                 break;
                         }
@@ -68,7 +68,7 @@ export default class Level
     public add(element : object) : Renderable | Collidable
     {
         this.renderables.push(element as Renderable);
-        if ("colVec" in element){
+        if ("isCollidable" in element){
             this.collidables.push(element as Collidable);
 
             return element as Collidable;
@@ -117,6 +117,13 @@ export default class Level
 
                     currentPixelPosition.x++;
                 }
+
+                //Workaround to avoid strange pixels duplication.                
+                this.pixels = this.pixels.filter(
+                    (value : Pixel, index : number, elements : Array<Pixel>) : boolean => index === elements.findIndex(
+                        (p : Pixel) : boolean => p.pos.equals(value.pos.elements)
+                    )
+                );
             }
         );
     }

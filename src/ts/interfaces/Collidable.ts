@@ -1,6 +1,7 @@
 import { Vector2 } from "@math.gl/core";
 
 export default interface Collidable {
-    radius : number;
-    colVec : Vector2;
+    pos : Vector2;
+    size : Vector2;
+    isCollidable : boolean;
 }

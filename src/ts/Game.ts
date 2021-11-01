@@ -25,10 +25,13 @@ class Game extends CanvasController implements Runnable {
         this.context = this.getCanvasInstance();
 
         this.level = new Level(this.context);
+
+
+        const basePlayerSize : number = 16.0;
         this.player = new Player(
             this.level,
-            new Vector2(Level.OFFSET, Level.OFFSET),
-            new Vector2(16.0, 16.0 * 2),
+            new Vector2(Level.OFFSET, this.height - Level.OFFSET - (basePlayerSize * 2)),
+            new Vector2(basePlayerSize, basePlayerSize * 2),
             new Vector4(255.0, 255.0, 0.0, 255.0)
         );
 
@@ -54,7 +57,7 @@ class Game extends CanvasController implements Runnable {
 
         if (this.unprocessedFrames > 10.0) this.unprocessedFrames = 10.0;
         while (this.unprocessedFrames > 1.0) {
-            this.player.tick(this.context);
+            this.player.tick();
 
             this.unprocessedFrames--;
         }
