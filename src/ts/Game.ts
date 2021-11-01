@@ -1,20 +1,18 @@
+import C2D from "./helpers/C2D";
+
 import Runnable from "./interfaces/Runnable";
 
 import CanvasController from "./controllers/CanvasController";
 
-import C2D from "./helpers/C2D";
-
-import Level from "./Level";
-import Player from "./entities/Player";
-import { Vector2, Vector4 } from "@math.gl/core";
+import GameScreen from "./screens/GameScreen";
 
 class Game extends CanvasController implements Runnable {
     private context : C2D;
-    private level : Level;
-    private player : Player;
 
     private lastTime : number = new Date().getTime();
     private unprocessedFrames : number  = 0.0;
+
+    private gameScreen : GameScreen;
 
     public constructor(width : number, height : number) {
         super(width, height);
@@ -23,17 +21,8 @@ class Game extends CanvasController implements Runnable {
         this.height = height;
 
         this.context = this.getCanvasInstance();
-
-        this.level = new Level(this.context);
-
-
-        const basePlayerSize : number = 16.0;
-        this.player = new Player(
-            this.level,
-            new Vector2(Level.OFFSET, this.height - Level.OFFSET - (basePlayerSize * 2)),
-            new Vector2(basePlayerSize, basePlayerSize * 2),
-            new Vector4(255.0, 255.0, 0.0, 255.0)
-        );
+        
+        this.gameScreen = new GameScreen(this.context);
 
         this.run();
     }
@@ -42,12 +31,12 @@ class Game extends CanvasController implements Runnable {
     {
         C2D.disableImageSmoothing(this.context);
 
-        this.level.init(this.player);
+        this.gameScreen.init();
 
         window.requestAnimationFrame(() : void => this.tick());
     }
 
-    private tick() : void
+    public tick() : void
     {
         C2D.clearRect(this.context, this.width, this.height);
 
@@ -57,7 +46,7 @@ class Game extends CanvasController implements Runnable {
 
         if (this.unprocessedFrames > 10.0) this.unprocessedFrames = 10.0;
         while (this.unprocessedFrames > 1.0) {
-            this.player.tick();
+            this.gameScreen.tick();
 
             this.unprocessedFrames--;
         }
@@ -69,8 +58,8 @@ class Game extends CanvasController implements Runnable {
 
     private render() : void
     {
-        this.level.render();
+        this.gameScreen.render();
     }
 }
 
-new Game(800, 400);
+new Game(800, 416);

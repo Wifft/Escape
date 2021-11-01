@@ -24,7 +24,6 @@ export default class Bitmap {
                 return context.getImageData(0, 0, canvas.width, canvas.height).data; 
             }
         );
-
     }
 
     private async loadFile() : Promise<File>

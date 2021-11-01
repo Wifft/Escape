@@ -1,7 +1,6 @@
 import { Vector2, Vector4 } from "@math.gl/core";
 import MathHelper from "./helpers/MathHelper";
 
-
 export default class Pixel {
     public pos : Vector2;
     public color : Vector4;

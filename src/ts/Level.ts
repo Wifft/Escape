@@ -1,20 +1,22 @@
 import { Vector2, Vector4 } from "@math.gl/core";
 
 import C2D from "./helpers/C2D";
+
+import Collidable from "./interfaces/Collidable";
 import Renderable from "./interfaces/Renderable";
 
 import Brick from "./blocks/Brick";
+import Wall from "./blocks/Wall";
+import Ground from "./blocks/Ground";
+
+import Player from "./entities/Player";
 
 import Bitmap from "./Bitmap";
 import Pixel from "./Pixel";
-import Player from "./entities/Player";
-import Wall from "./blocks/Wall";
-import Ground from "./blocks/Ground";
-import Collidable from "./interfaces/Collidable";
 
 export default class Level
 {
-    public static OFFSET = 16.0;
+    public static OFFSET = 32.0;
 
     private renderables = new Array<Renderable>();
     private collidables = new Array<Collidable>();
@@ -30,13 +32,10 @@ export default class Level
         this.context = context;
     }
 
-    public init(player : Player) : void
+    public init() : void
     {
         this.loadPixels();
         this.addBlocks();
-        this.add(player);
-
-        console.log(this.getAllCollidables());
     }
 
     public addBlocks() : void
@@ -47,15 +46,15 @@ export default class Level
                     (p : Pixel) : void => {
                         switch (p.colorHex) {
                             case 0xff0000ff:
-                                this.add(new Brick(p.pos, new Vector2(16.0, 16.0)));
+                                this.add(new Brick(p.pos, new Vector2(32.0, 32.0)));
 
                                 break;
                             case 0x00ff00ff:
-                                this.add(new Ground(p.pos, new Vector2(16.0, 16.0)));
+                                this.add(new Ground(p.pos, new Vector2(32.0, 32.0)));
                                 
                                 break;
                             case 0x0000ffff:
-                                this.add(new Wall(p.pos, new Vector2(16.0, 16.0)));
+                                this.add(new Wall(p.pos, new Vector2(32.0, 32.0)));
                                 
                                 break;
                         }
@@ -100,11 +99,11 @@ export default class Level
             (bitmapData : Uint8ClampedArray) : void => {                
                 const currentPixelPosition = new Vector2(0.0, 0.0);
 
-                for (let i : number = 4; i <= bitmapData.length; i += 4) {
+                for (let i : number = 4.0; i <= bitmapData.length; i += 4.0) {
                     const pixelData : Array<number> = Array.from(bitmapData.subarray(i - 4, i)); 
                     
-                    if (currentPixelPosition.x >= 50) {
-                        currentPixelPosition.x = 0;
+                    if (currentPixelPosition.x >= 25.0) {
+                        currentPixelPosition.x = 0.0;
                         currentPixelPosition.y++;
                     }
 

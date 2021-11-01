@@ -26,7 +26,8 @@ export default class C2D extends CanvasRenderingContext2D {
         this.resetFillStyle(context);
     }
 
-    public static renderText(context : C2D, text : string, font : string, pos : Vector2, width : number) : void {
+    public static renderText(context : C2D, text : string, font : string, pos : Vector2, width : number) : void
+    {
         context.font = font;
         context.fillText(text, pos.x, pos.y, width);
 
@@ -41,12 +42,9 @@ export default class C2D extends CanvasRenderingContext2D {
         context.shadowOffsetY = offset.y;
     } 
 
-    public static drawImage(context : C2D, source : string, pos : Vector2, size : Vector2) : void
+    public static drawImage(context : C2D, source : HTMLImageElement, sPos : Vector2, sSize : Vector2, dPos : Vector2, dSize : Vector2) : void
     {
-        const backgroundImage = new Image();
-        backgroundImage.src = source;
-
-        context.drawImage(backgroundImage, pos.x, pos.y, size.x, size.y);
+        context.drawImage(source, sPos.x, sPos.y, sSize.x, sSize.y, dPos.x, dPos.y, dSize.x, dSize.y);
     }
 
     public static disableImageSmoothing(context : C2D) : void 

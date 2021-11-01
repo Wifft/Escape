@@ -1,14 +1,16 @@
 import { Vector2 } from "@math.gl/core";
-import Player from "../entities/Player";
+
 import Collidable from "../interfaces/Collidable";
+
+import Player from "../entities/Player";
 
 export default class Collider {
     public static checkCollision(player : Player, target : Collidable) : string|null
     {
-        const dist : Vector2 = new Vector2(
-            (player.pos.x + (player.size.x / 2)) - (target.pos.x + (target.size.x / 2)),
-            (player.pos.y + (player.size.y / 2)) - (target.pos.y + (target.size.y / 2)),
-        );
+        const xd : number = (player.pos.x + (player.size.x / 2)) - (target.pos.x + (target.size.x / 2));
+        const yd : number = (player.pos.y + (player.size.y / 2)) - (target.pos.y + (target.size.y / 2));
+
+        const dist : Vector2 = new Vector2(xd, yd);
         
         const hSize : Vector2 = new Vector2(
             (player.size.x / 2) + (target.size.x / 2),
@@ -26,9 +28,11 @@ export default class Collider {
                     player.grounded = true;
                     player.falling = false;
                 }
-             
+                
                 dist.y > 0 ? dir = "b" : dir = "t";
                 dist.y > 0 ? player.pos.y += yo : player.pos.y -= yo;
+
+                console.log(dir);
 
                 return dir;
             }
