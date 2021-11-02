@@ -2,11 +2,11 @@ import C2D from "./helpers/C2D";
 
 import Runnable from "./interfaces/Runnable";
 
-import CanvasController from "./controllers/CanvasController";
+import Canvas from "./controllers/Canvas";
 
 import GameScreen from "./screens/GameScreen";
 
-class Game extends CanvasController implements Runnable {
+class Game extends Canvas implements Runnable {
     private context : C2D;
 
     private lastTime : number = new Date().getTime();

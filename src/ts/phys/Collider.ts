@@ -31,11 +31,9 @@ export default class Collider {
                         source.falling = false;
                     }
                 }
-                
+
                 dist.y > 0 ? dir = "b" : dir = "t";
                 dist.y > 0 ? source.pos.y += yo : source.pos.y -= yo;
-
-                console.log(dir);
 
                 return dir;
             }
@@ -51,7 +49,7 @@ export default class Collider {
     {
         return source.pos.x < target.pos.x + target.size.x
             && source.pos.x + source.size.x > target.pos.x
-            && source.pos.y < target.pos.y + target.size.y
-            && source.pos.y + source.size.y > target.pos.y;
+            && (source instanceof Player ? source.pos.y + 0.25 : source.pos.y) < target.pos.y + target.size.y
+            && (source instanceof Player ? source.pos.y + 0.25 : source.pos.y) + source.size.y > target.pos.y;
     }
 } 

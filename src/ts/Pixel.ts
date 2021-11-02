@@ -1,5 +1,8 @@
 import { Vector2, Vector4 } from "@math.gl/core";
+
 import MathHelper from "./helpers/MathHelper";
+
+import GameScreen from "./screens/GameScreen";
 
 export default class Pixel {
     public pos : Vector2;
@@ -8,7 +11,7 @@ export default class Pixel {
 
     public constructor(pos : Vector2, color : Vector4)
     {
-        this.pos = pos;
+        this.pos = pos.multiplyByScalar(GameScreen.SCALE);
         this.color = color;
         this.colorHex = MathHelper.rgba2Hex(color);
     }

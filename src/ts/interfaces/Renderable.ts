@@ -1,6 +1,7 @@
 import { Vector2, Vector4 } from "@math.gl/core";
 
 import C2D from "../helpers/C2D";
+
 import SpriteSheet from "../SpriteSheet";
 
 export default interface Renderable {

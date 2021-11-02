@@ -9,12 +9,14 @@ import Brick from "./blocks/Brick";
 import Wall from "./blocks/Wall";
 import Ground from "./blocks/Ground";
 
+import Enemy from "./entities/Enemy";
+
 import Bitmap from "./Bitmap";
 import Pixel from "./Pixel";
 
 export default class Level
 {
-    public static OFFSET = 32.0;
+    public static readonly OFFSET = 32.0;
 
     private renderables = new Array<Renderable>();
     private collidables = new Array<Collidable>();
@@ -44,15 +46,25 @@ export default class Level
                     (p : Pixel) : void => {
                         switch (p.colorHex) {
                             case 0xff0000ff:
-                                this.add(new Brick(p.pos, new Vector2(32.0, 32.0)));
+                                this.add(new Brick(p.pos));
 
                                 break;
                             case 0x00ff00ff:
-                                this.add(new Ground(p.pos, new Vector2(32.0, 32.0)));
+                                this.add(new Ground(p.pos));
                                 
                                 break;
                             case 0x0000ffff:
-                                this.add(new Wall(p.pos, new Vector2(32.0, 32.0)));
+                                this.add(new Wall(p.pos));
+                                
+                                break;
+                            case 0xffc90eff:
+                                console.log(p);
+
+                                const sPos : Vector2 = new Vector2(16.0, 0.0);
+                                const size : Vector2 = new Vector2(32.0, 32.0);
+                                const color : Vector4 = new Vector4(0.0, 0.0, 0.0, 255.0);
+
+                                this.add(new Enemy(this, sPos, size.clone().divideScalar(2), p.pos, size, color));
                                 
                                 break;
                         }

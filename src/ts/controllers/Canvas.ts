@@ -1,6 +1,6 @@
 import C2D from "../helpers/C2D";
 
-export default abstract class CanvasController {
+export default abstract class Canvas {
     protected width : number;
     protected height : number;
     

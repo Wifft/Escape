@@ -5,15 +5,17 @@ import MathHelper from "../helpers/MathHelper";
 
 import Collidable from "../interfaces/Collidable";
 import Renderable from "../interfaces/Renderable";
+
 import SpriteSheet from "../SpriteSheet";
 
 export default abstract class Block implements Renderable, Collidable {
     public sPos : Vector2;
     public sSize : Vector2;
-    public pos : Vector2;
-    public size : Vector2;
-    public color : Vector4;
 
+    public pos : Vector2;
+    public size : Vector2 = new Vector2(32.0, 32.0);
+    
+    public color : Vector4;
     public hexColor : number;
 
     public isCollidable : boolean;
@@ -21,12 +23,11 @@ export default abstract class Block implements Renderable, Collidable {
     public spriteSheet : SpriteSheet = new SpriteSheet('../assets/img/blocks.png');
     public img : HTMLImageElement;
 
-    public constructor(sPos : Vector2, sSize : Vector2, pos : Vector2, size : Vector2, color : Vector4)
+    public constructor(sPos : Vector2, pos : Vector2, color : Vector4)
     {
         this.sPos = sPos;
-        this.sSize = sSize;
-        this.pos = pos.multiplyByScalar(32.0);
-        this.size = size;
+        this.sSize = this.size.clone().divideScalar(2.0);
+        this.pos = pos;
         
         this.color = color;
 
