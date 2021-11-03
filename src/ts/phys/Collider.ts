@@ -25,7 +25,7 @@ export default class Collider {
             const yo : number = hSize.y - Math.abs(dist.y);
 
             if (xo >= yo) {
-                if ("grounded" in source) {
+                if (source instanceof Player) {
                     if (source.falling) { 
                         source.grounded = true;
                         source.falling = false;

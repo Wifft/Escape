@@ -16,7 +16,6 @@ export default abstract class Entity implements Renderable
 
     public pos : Vector2;
     public size : Vector2;
-    public color : Vector4;
 
     public spriteSheet = new SpriteSheet('../assets/img/entities.png');
     public img : HTMLImageElement;
@@ -25,15 +24,13 @@ export default abstract class Entity implements Renderable
 
     public direction : number|null = 0;
 
-    public constructor(level : Level, sPos : Vector2, sSize : Vector2, pos : Vector2, size : Vector2, color : Vector4)
+    public constructor(level : Level, sPos : Vector2, sSize : Vector2, pos : Vector2, size : Vector2)
     {   this.sPos = sPos;
         this.sSize = sSize;
 
         this.pos = pos;
         this.size = size;
         
-        this.color = color;
-
         this.img = this.spriteSheet.load();
 
         this.level = level;
@@ -44,7 +41,7 @@ export default abstract class Entity implements Renderable
         C2D.drawImage(context, this.img, this.sPos, this.sSize.clone().sub(new Vector2(1.0, 0.0)), this.pos, this.size);
     }
 
-    public isColliding() : boolean
+    protected isColliding() : boolean
     {
         for (const collidable of this.level.getAllCollidables()) {
             const colliding : string|null = Collider.checkCollision(this, collidable);
@@ -54,12 +51,22 @@ export default abstract class Entity implements Renderable
         return false;
     }
 
-    public intersects() : boolean
+    protected intersects() : boolean
     {
         for (const collidable of this.level.getAllCollidables()) {
             if (Collider.intersects(this, collidable)) return true;
         }
 
         return false;
+    }
+
+    protected isInChunk() : boolean
+    {
+        const canvas : HTMLCanvasElement = this.level.context.canvas as HTMLCanvasElement;
+
+        const min : Vector2 = new Vector2(Level.OFFSET, Level.OFFSET);
+        const max : Vector2 = new Vector2(canvas.width - Level.OFFSET, canvas.height - Level.OFFSET);
+        
+        return this.pos.x > min.x && this.pos.x < max.x && this.pos.y > min.y && this.pos.y < max.y;
     }
 }

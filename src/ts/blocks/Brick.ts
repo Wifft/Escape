@@ -1,14 +1,15 @@
-import { Vector2, Vector4 } from "@math.gl/core";
+import { Vector2 } from "@math.gl/core";
 
 import Block from "./Block";
 
 export default class Brick extends Block
 {
-    public constructor(pos : Vector2)
-    {  
-        const sPos : Vector2 = new Vector2(0.0, 0.0);
-        const color : Vector4 = new Vector4(189.0, 195.0, 199.0, 255.0);
+    public override sPos = new Vector2(0.0, 0.0);
 
-        super(sPos, pos, color);
+    public constructor(pos : Vector2, variant : number)
+    {  
+        super(pos);
+
+        if (variant === 1) this.sPos = new Vector2(48.0, 0.0);
     }
 }

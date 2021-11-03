@@ -9,7 +9,7 @@ export default abstract class Canvas {
         this.height = height;
     }
 
-    protected getCanvasInstance() : C2D
+    protected getInstance() : C2D
     {
         const canvas : HTMLCanvasElement = document.querySelector("#game") as HTMLCanvasElement;
         canvas.width = this.width;

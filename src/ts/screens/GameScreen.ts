@@ -1,4 +1,4 @@
-import { Vector2, Vector4 } from "@math.gl/core";
+import { Vector2 } from "@math.gl/core";
 
 import C2D from "../helpers/C2D";
 
@@ -6,21 +6,21 @@ import Player from "../entities/Player";
 
 import Level from "../Level";
 
-export default class GameScreen {
-    public static readonly SCALE : number = 32.0;
+import Screen from "./Screen";
 
-    private context : C2D;
+export default class GameScreen extends Screen {
+    public static readonly SCALE : number = 32.0;
+    
+    public playerDead : boolean = false;
     
     private level : Level;
     private player : Player|null = null;
-    
-    private canvas : HTMLCanvasElement;
 
     public constructor(context : C2D)
     {
-        this.context = context;
-        this.level = new Level(this.context);
-        this.canvas = context.canvas;
+        super(context);
+
+        this.level = new Level(context);
     }
 
     public init() : void
@@ -35,10 +35,11 @@ export default class GameScreen {
     public tick() : void
     {
         const player : Player = this.player as Player;
-        player.tick();
+        if (player.alive) player.tick();
+        else player.pos.y += 4.0, this.playerDead = true
     }
 
-    public render() : void
+    public override render() : void
     {
         this.level.render();
     }
@@ -48,11 +49,9 @@ export default class GameScreen {
         const sPos = new Vector2();
         const sSize = new Vector2();
         
-        const pos : Vector2 = new Vector2(Level.OFFSET, this.canvas.height - (Level.OFFSET * 2));
+        const pos : Vector2 = new Vector2(448.0, 128.0);
         const size : Vector2 = new Vector2(GameScreen.SCALE, GameScreen.SCALE + (GameScreen.SCALE / 2));
         
-        const color : Vector4 = new Vector4(255.0, 255.0, 0.0, 255.0);
-
-        return new Player(this.level, sPos, sSize, pos, size, color);
+        return new Player(this.level, sPos, sSize, pos, size);
     }
 }

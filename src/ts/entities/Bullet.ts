@@ -17,7 +17,7 @@ export default class Bullet extends Entity {
         const sSize : Vector2 = new Vector2(16.0, 16.0);
         const color : Vector4 = new Vector4(189.0, 195.0, 199.0, 255.0);
 
-        super(level, sPos, sSize, pos, size, color);
+        super(level, sPos, sSize, pos, size);
 
         this.level = level;
         this.speed = speed * 4;
@@ -26,7 +26,7 @@ export default class Bullet extends Entity {
 
     public render() : void
     {
-        if (super.intersects()) this.level.remove(this as Renderable); 
+        if (super.intersects() || !super.isInChunk()) this.level.remove(this as Renderable); 
 
         this.direction === 0 ? this.pos.x -= this.speed : this.pos.x += this.speed;
         

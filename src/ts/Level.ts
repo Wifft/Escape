@@ -13,6 +13,7 @@ import Enemy from "./entities/Enemy";
 
 import Bitmap from "./Bitmap";
 import Pixel from "./Pixel";
+import Gear from "./blocks/Gear";
 
 export default class Level
 {
@@ -26,6 +27,8 @@ export default class Level
     public context : C2D;
 
     private bitmap : Bitmap = new Bitmap('../../assets/img/bitmap.png');
+    
+    public currentChunk : number = 1;
 
     public constructor(context : C2D)
     {
@@ -46,7 +49,11 @@ export default class Level
                     (p : Pixel) : void => {
                         switch (p.colorHex) {
                             case 0xff0000ff:
-                                this.add(new Brick(p.pos));
+                                this.add(new Brick(p.pos, 0));
+
+                                break;
+                            case 0x008000ff:
+                                this.add(new Brick(p.pos, 1));
 
                                 break;
                             case 0x00ff00ff:
@@ -57,14 +64,15 @@ export default class Level
                                 this.add(new Wall(p.pos));
                                 
                                 break;
+                            case 0xa349a4ff:
+                                this.add(new Gear(p.pos));
+                                
+                                break;
                             case 0xffc90eff:
-                                console.log(p);
-
                                 const sPos : Vector2 = new Vector2(16.0, 0.0);
                                 const size : Vector2 = new Vector2(32.0, 32.0);
-                                const color : Vector4 = new Vector4(0.0, 0.0, 0.0, 255.0);
 
-                                this.add(new Enemy(this, sPos, size.clone().divideScalar(2), p.pos, size, color));
+                                this.add(new Enemy(this, sPos, size.clone().divideScalar(2), p.pos, size));
                                 
                                 break;
                         }

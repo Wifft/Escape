@@ -1,4 +1,4 @@
-import { Vector2, Vector4 } from "@math.gl/core";
+import { Vector2 } from "@math.gl/core";
 
 import Level from "../Level";
 
@@ -6,9 +6,9 @@ import Entity from "./Entity";
 
 export default class Enemy extends Entity
 {
-    public constructor(level : Level, sPos : Vector2, sSize : Vector2, pos : Vector2, size : Vector2, color : Vector4)
+    public constructor(level : Level, sPos : Vector2, sSize : Vector2, pos : Vector2, size : Vector2)
     {
-        super(level, sPos, sSize, pos, size, color);
+        super(level, sPos, sSize, pos, size);
     }
 
     public tick() : void

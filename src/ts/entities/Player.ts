@@ -1,4 +1,4 @@
-import { Vector2, Vector4 } from "@math.gl/core";
+import { Vector2 } from "@math.gl/core";
 
 import C2D from "../helpers/C2D";
 
@@ -14,6 +14,8 @@ import SpriteSheet from "../SpriteSheet";
 
 import Bullet from "./Bullet";
 import Entity from "./Entity";
+import Gear from "../blocks/Gear";
+import GameScreen from "../screens/GameScreen";
 
 export default class Player extends Entity implements Renderable {
     public override spriteSheet : SpriteSheet = new SpriteSheet('../assets/img/player.png');
@@ -21,24 +23,26 @@ export default class Player extends Entity implements Renderable {
 
     public override direction : number|null = null;
 
-    
     public jumping : boolean = false;
     public falling : boolean = false;
     public grounded : boolean = true;
     public shooting : boolean = false;
 
+    public alive : boolean = true;
+
     public movingLeft : boolean = false;
     public movingRight : boolean = false;
     
     public speed : number = 0.25;
+    public speedA : number = 0.25;
     
     private keysDown : Array<boolean> = new Array<boolean>();
 
     private posA : Vector2 = new Vector2();
 
-    public constructor(level : Level, sPos : Vector2, sSize : Vector2,  pos : Vector2, size : Vector2, color : Vector4)
+    public constructor(level : Level, sPos : Vector2, sSize : Vector2,  pos : Vector2, size : Vector2)
     {
-        super(level, sPos, sSize, pos, size, color);
+        super(level, sPos, sSize, pos, size);
 
         this.level = level;
         this.img = this.spriteSheet.load();
@@ -50,12 +54,19 @@ export default class Player extends Entity implements Renderable {
     public override render(context : C2D) : void
     {
         let spritePos : number = 0.0;
-        if (this.jumping || this.falling) spritePos = 32.0 * 1;
-        else if (this.movingRight) spritePos = 32.0 * 2;
-        else if (this.movingLeft) spritePos = 32.0 * 3;
-        else if (this.direction === 0) spritePos = 32.0 * 5;
-        else if (this.direction === 1) spritePos = 32.0 * 4;
 
+        if (this.jumping || this.falling) spritePos = GameScreen.SCALE * 1;
+        else if (this.movingRight) spritePos = GameScreen.SCALE * 2;
+        else if (this.movingLeft) spritePos = GameScreen.SCALE * 3;
+        else if (this.direction === 0) spritePos = GameScreen.SCALE * 5;
+        else if (this.direction === 1) spritePos = GameScreen.SCALE * 4;
+
+        if (!this.alive) {
+            spritePos = GameScreen.SCALE * 6;
+            this.size = new Vector2(48.0, GameScreen.SCALE);
+            this.sSize = this.size;
+        }
+        
         this.sPos = new Vector2(spritePos, 0.0);
         this.sSize = this.size;
 
@@ -65,26 +76,43 @@ export default class Player extends Entity implements Renderable {
     public tick() : void
     {
         this.keyboardMove();
+
+        const canvas : HTMLCanvasElement = this.level.context.canvas as HTMLCanvasElement;
+
+        const xOffset : number = Level.OFFSET + this.size.x;
+        const yOffset : number = Level.OFFSET + this.size.y;
+
+        const min : Vector2 = new Vector2(Level.OFFSET, Level.OFFSET);
+        const max : Vector2 = new Vector2(canvas.width - xOffset, canvas.height - yOffset);
+        
+        if (this.pos.x < min.x) this.pos.x = min.x;
+        if (this.pos.x > max.x) this.goToNextChunk(), this.pos.x += 64.0;
+        if (this.pos.y < min.y) this.pos.y = min.y;
+        if (this.pos.y > max.y) this.pos.y = max.y;
         
         for (const collidable of this.level.getAllCollidables()) {
             const dir : string|null = Collider.checkCollision(this, collidable);
 
-            switch (dir) {
-                case "b":
-                    if (this.jumping) {
-                        this.falling = true;
-                        this.jumping = false;
-                    }
-
-                    break;
-                case "t":
-                    if (this.falling) {
-                        this.grounded = true;
-                        this.falling = false;
-                    }
-
-                    break;
+            if (dir !== null) {
+                if (collidable instanceof Gear) this.alive = false;
+                
+                switch (dir) {
+                    case "b":
+                        if (this.jumping) {
+                            this.falling = true;
+                            this.jumping = false;
+                        }
+                        
+                        break;
+                    case "t":
+                        if (this.falling) {
+                            this.grounded = true;
+                            this.falling = false;
+                        }
+                        
+                        break;
                 }
+            }
         }
 
         if (this.grounded && !this.intersects()) {
@@ -93,6 +121,9 @@ export default class Player extends Entity implements Renderable {
         }
 
         if (this.falling && !this.grounded) this.pos.y += this.speed;
+
+        this.speed = this.speedA;
+        if (this.jumping || this.falling) this.speed = 0.5;
 
         this.tryJump();
     }
@@ -129,7 +160,7 @@ export default class Player extends Entity implements Renderable {
 
     private tryJump() : void
     {
-        const maxHeight : number = 64.0;
+        const maxHeight : number = 72.0;
 
         if (this.jumping) {
             this.grounded = false;
@@ -151,6 +182,11 @@ export default class Player extends Entity implements Renderable {
         const size = new Vector2(16.0, 16.0);
 
         this.level.add(new Bullet(this.level, this.pos.clone(), size, this.speed, this.direction as number));
+    }
+
+    private goToNextChunk() : void
+    {
+        this.level.currentChunk++;
     }
 
     private onKeyDown(e : KeyboardEvent) : void

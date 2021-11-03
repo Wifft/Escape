@@ -9,7 +9,6 @@ export default interface Renderable {
     size : Vector2;
     sPos? : Vector2;
     sSize? : Vector2;
-    color : Vector4;
     hexColor? : number;
     spriteSheet : SpriteSheet
     img : HTMLImageElement

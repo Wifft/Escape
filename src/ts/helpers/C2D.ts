@@ -26,9 +26,10 @@ export default class C2D extends CanvasRenderingContext2D {
         this.resetFillStyle(context);
     }
 
-    public static renderText(context : C2D, text : string, font : string, pos : Vector2, width : number) : void
+    public static renderText(context : C2D, text : string, font : string, pos : Vector2, width : number, color : Vector4) : void
     {
         context.font = font;
+        context.fillStyle = this.getColor(color);
         context.fillText(text, pos.x, pos.y, width);
 
         this.resetTextSettings(context);
@@ -78,10 +79,11 @@ export default class C2D extends CanvasRenderingContext2D {
     public static resetTextSettings(context : C2D) : void 
     {
         context.font = "10px sans-serif";
+        C2D.resetFillStyle(context);
     }
 
     public static getColor(color : Vector4)  : string
     {
-        return `rgb(${color.x}, ${color.y}, ${color.z})`;
+        return `rgba(${color.x}, ${color.y}, ${color.z}, ${color.w})`;
     }
 } 
