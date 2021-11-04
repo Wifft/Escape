@@ -14,6 +14,7 @@ import Enemy from "./entities/Enemy";
 import Bitmap from "./Bitmap";
 import Pixel from "./Pixel";
 import Gear from "./blocks/Gear";
+import Player from "./entities/Player";
 
 export default class Level
 {
@@ -41,7 +42,17 @@ export default class Level
         this.addBlocks();
     }
 
-    public addBlocks() : void
+    public refresh() : void
+    {
+        this.pixels = [];
+        this.renderables = this.renderables.filter((r : Renderable) : boolean => r instanceof Player);
+        this.collidables = this.collidables.filter((c : Collidable) : boolean => c instanceof Player);
+
+        this.loadPixels();
+        this.addBlocks();
+    }
+
+    private addBlocks() : void
     {
         this.loadPixels().then(
             () : void => {
@@ -118,7 +129,7 @@ export default class Level
     
     private async loadPixels() : Promise<void|Pixel>
     {
-        return this.bitmap.getImageData().then(
+        return this.bitmap.getImageData(this.currentChunk, this.context.canvas).then(
             (bitmapData : Uint8ClampedArray) : void => {                
                 const currentPixelPosition = new Vector2(0.0, 0.0);
 

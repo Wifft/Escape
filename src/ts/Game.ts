@@ -64,4 +64,4 @@ class Game extends Canvas implements Runnable {
     }
 }
 
-new Game(800, 416);
+new Game(800, 480);

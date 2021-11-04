@@ -86,7 +86,7 @@ export default class Player extends Entity implements Renderable {
         const max : Vector2 = new Vector2(canvas.width - xOffset, canvas.height - yOffset);
         
         if (this.pos.x < min.x) this.pos.x = min.x;
-        if (this.pos.x > max.x) this.goToNextChunk(), this.pos.x += 64.0;
+        if (this.pos.x > max.x) this.goToNextChunk();
         if (this.pos.y < min.y) this.pos.y = min.y;
         if (this.pos.y > max.y) this.pos.y = max.y;
         
@@ -123,7 +123,6 @@ export default class Player extends Entity implements Renderable {
         if (this.falling && !this.grounded) this.pos.y += this.speed;
 
         this.speed = this.speedA;
-        if (this.jumping || this.falling) this.speed = 0.5;
 
         this.tryJump();
     }
@@ -186,7 +185,9 @@ export default class Player extends Entity implements Renderable {
 
     private goToNextChunk() : void
     {
+        this.pos.x = Level.OFFSET;
         this.level.currentChunk++;
+        this.level.refresh();
     }
 
     private onKeyDown(e : KeyboardEvent) : void
