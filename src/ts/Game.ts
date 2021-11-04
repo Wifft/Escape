@@ -55,7 +55,7 @@ class Game extends Canvas implements Runnable {
         this.render();
 
         if (!this.gameScreen.playerDead) window.requestAnimationFrame(() : void => this.tick());
-        if (this.gameScreen.playerDead) new DeathScreen(this.context).render();
+        else if (this.gameScreen.playerDead) new DeathScreen(this.context).render();
     }
 
     private render() : void
@@ -64,4 +64,4 @@ class Game extends Canvas implements Runnable {
     }
 }
 
-new Game(800, 480);
+new Game(800, 512);

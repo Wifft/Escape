@@ -49,7 +49,7 @@ export default class GameScreen extends Screen {
         const sPos = new Vector2();
         const sSize = new Vector2();
         
-        const pos : Vector2 = new Vector2(448.0, 128.0);
+        const pos : Vector2 = new Vector2(384.0, 128.0);
         const size : Vector2 = new Vector2(GameScreen.SCALE, GameScreen.SCALE + (GameScreen.SCALE / 2));
         
         return new Player(this.level, sPos, sSize, pos, size);

@@ -79,11 +79,10 @@ export default class Player extends Entity implements Renderable {
 
         const canvas : HTMLCanvasElement = this.level.context.canvas as HTMLCanvasElement;
 
-        const xOffset : number = Level.OFFSET + this.size.x;
-        const yOffset : number = Level.OFFSET + this.size.y;
+        const offset : number = Level.OFFSET / 2;
 
-        const min : Vector2 = new Vector2(Level.OFFSET, Level.OFFSET);
-        const max : Vector2 = new Vector2(canvas.width - xOffset, canvas.height - yOffset);
+        const min : Vector2 = new Vector2(offset, offset);
+        const max : Vector2 = new Vector2(canvas.width - offset, canvas.height - offset);
         
         if (this.pos.x < min.x) this.pos.x = min.x;
         if (this.pos.x > max.x) this.goToNextChunk();
@@ -159,7 +158,7 @@ export default class Player extends Entity implements Renderable {
 
     private tryJump() : void
     {
-        const maxHeight : number = 72.0;
+        const maxHeight : number = 96.0;
 
         if (this.jumping) {
             this.grounded = false;
