@@ -51,6 +51,16 @@ export default abstract class Entity implements Renderable
         return false;
     }
 
+    protected getCollisionFace() : string|null
+    {
+        for (const collidable of this.level.getAllCollidables()) {
+            const colliding : string|null = Collider.checkCollision(this, collidable);
+            if (colliding !== null) return colliding;
+        }
+
+        return null;
+    }
+
     protected intersects() : boolean
     {
         for (const collidable of this.level.getAllCollidables()) {
@@ -60,12 +70,14 @@ export default abstract class Entity implements Renderable
         return false;
     }
 
-    protected isInChunk() : boolean
+    public isInChunk() : boolean
     {
         const canvas : HTMLCanvasElement = this.level.context.canvas as HTMLCanvasElement;
 
-        const min : Vector2 = new Vector2(Level.OFFSET, Level.OFFSET);
-        const max : Vector2 = new Vector2(canvas.width - Level.OFFSET, canvas.height - Level.OFFSET);
+        const offset : number = Level.OFFSET / 2.0;
+
+        const min : Vector2 = new Vector2(offset, offset);
+        const max : Vector2 = new Vector2(canvas.width - offset, canvas.height - offset);
         
         return this.pos.x > min.x && this.pos.x < max.x && this.pos.y > min.y && this.pos.y < max.y;
     }

@@ -36,7 +36,7 @@ export default class GameScreen extends Screen {
     {
         const player : Player = this.player as Player;
         if (player.alive) player.tick();
-        else player.pos.y += 4.0, this.playerDead = true
+        else player.pos.y += 10.0, this.playerDead = true
     }
 
     public override render() : void

@@ -15,6 +15,7 @@ import Bitmap from "./Bitmap";
 import Pixel from "./Pixel";
 import Gear from "./blocks/Gear";
 import Player from "./entities/Player";
+import Turret from "./entities/Turret";
 
 export default class Level
 {
@@ -79,11 +80,12 @@ export default class Level
                                 this.add(new Gear(p.pos));
                                 
                                 break;
-                            case 0xffc90eff:
-                                const sPos : Vector2 = new Vector2(16.0, 0.0);
-                                const size : Vector2 = new Vector2(32.0, 32.0);
-
-                                this.add(new Enemy(this, sPos, size.clone().divideScalar(2), p.pos, size));
+                            case 0xc3c3c3ff:
+                                this.add(new Turret(this, new Vector2(16.0, 0.0), new Vector2(32.0, 32.0).clone().divideScalar(2), p.pos, new Vector2(32.0, 32.0), 0));
+                                
+                                break;
+                            case 0xc4c4c4ff:
+                                this.add(new Turret(this, new Vector2(48.0, 0.0), new Vector2(32.0, 32.0).divideScalar(2), p.pos, new Vector2(32.0, 32.0), 1));
                                 
                                 break;
                         }
@@ -93,7 +95,7 @@ export default class Level
         );
     }
 
-    public add(element : object) : Renderable | Collidable
+    public add(element : object) : Renderable|Collidable
     {
         this.renderables.push(element as Renderable);
         if ("isCollidable" in element){

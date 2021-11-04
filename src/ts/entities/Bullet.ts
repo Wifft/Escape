@@ -1,34 +1,74 @@
 import { Vector2, Vector4 } from "@math.gl/core";
+import Collidable from "../interfaces/Collidable";
 
 import Renderable from "../interfaces/Renderable";
 
 import Level from "../Level";
+import Collider from "../phys/Collider";
 
 import Entity from "./Entity";
+import Player from "./Player";
 
 export default class Bullet extends Entity {
     public level : Level;
 
     public speed : number;
     
-    public constructor(level : Level, pos : Vector2, size : Vector2, speed : number, direction : number)
+    public source : Entity;
+    
+    public constructor(level : Level, pos : Vector2, size : Vector2, speed : number, direction : number, source : Entity)
     {
         const sPos : Vector2 = new Vector2(0.0, 0.0);
         const sSize : Vector2 = new Vector2(16.0, 16.0);
-        const color : Vector4 = new Vector4(189.0, 195.0, 199.0, 255.0);
 
         super(level, sPos, sSize, pos, size);
 
         this.level = level;
         this.speed = speed * 4;
         this.direction = direction;
+
+        this.source = source;
     }
 
     public render() : void
     {
-        if (super.intersects() || !super.isInChunk()) this.level.remove(this as Renderable); 
+        if (!super.isInChunk() || (super.intersects() && this.source instanceof Player)) this.level.remove(this as Renderable);
+        if (!(this.source instanceof Player)) {
+            for (const renderable of this.level.getAllRenderables()) {
+                if (renderable instanceof Player && Collider.intersects(this, renderable as any)) renderable.alive = false;
+            }
+        }
 
-        this.direction === 0 ? this.pos.x -= this.speed : this.pos.x += this.speed;
+        switch(this.direction) {
+            case 0:
+                this.pos.x -= this.speed;
+
+                break;
+            case 1:
+                this.pos.x += this.speed;
+
+                break;
+            case 2:
+                this.pos.x -= this.speed;
+                this.pos.y -= this.speed;
+                
+                break;
+            case 3:
+                this.pos.x += this.speed;
+                this.pos.y -= this.speed;
+
+                break;
+            case 4:
+                this.pos.x += this.speed;
+                this.pos.y += this.speed;
+
+                break;
+            case 5:
+                this.pos.x -= this.speed;
+                this.pos.y += this.speed;
+
+                break;
+        }
         
         super.render(this.level.context);
     }

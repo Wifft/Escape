@@ -16,8 +16,9 @@ import Bullet from "./Bullet";
 import Entity from "./Entity";
 import Gear from "../blocks/Gear";
 import GameScreen from "../screens/GameScreen";
+import Collidable from "../interfaces/Collidable";
 
-export default class Player extends Entity implements Renderable {
+export default class Player extends Entity {
     public override spriteSheet : SpriteSheet = new SpriteSheet('../assets/img/player.png');
     public override img : HTMLImageElement;
 
@@ -33,8 +34,8 @@ export default class Player extends Entity implements Renderable {
     public movingLeft : boolean = false;
     public movingRight : boolean = false;
     
-    public speed : number = 0.25;
-    public speedA : number = 0.25;
+    public speed : number = 0.60;
+    public speedA : number = 0.60;
     
     private keysDown : Array<boolean> = new Array<boolean>();
 
@@ -61,13 +62,16 @@ export default class Player extends Entity implements Renderable {
         else if (this.direction === 0) spritePos = GameScreen.SCALE * 5;
         else if (this.direction === 1) spritePos = GameScreen.SCALE * 4;
 
+        this.sPos = new Vector2(spritePos, 0.0);
         if (!this.alive) {
             spritePos = GameScreen.SCALE * 6;
-            this.size = new Vector2(48.0, GameScreen.SCALE);
+
+            this.size = new Vector2(48.0, GameScreen.SCALE - 8.0);
+            
+            this.sPos = new Vector2(spritePos, this.direction === 0 ? 24.0 : 0.0);
             this.sSize = this.size;
         }
         
-        this.sPos = new Vector2(spritePos, 0.0);
         this.sSize = this.size;
 
         C2D.drawImage(context, this.img, this.sPos, this.sSize, this.pos, this.size);
@@ -179,7 +183,7 @@ export default class Player extends Entity implements Renderable {
 
         const size = new Vector2(16.0, 16.0);
 
-        this.level.add(new Bullet(this.level, this.pos.clone(), size, this.speed, this.direction as number));
+        this.level.add(new Bullet(this.level, this.pos.clone(), size, this.speed, this.direction as number, this));
     }
 
     private goToNextChunk() : void
@@ -198,6 +202,6 @@ export default class Player extends Entity implements Renderable {
     private onKeyUp(e : KeyboardEvent) : void
     {
         const keyCode = Input.getPseduoKeyCode(e.code);
-        if (keyCode !== null) this.keysDown[keyCode] = false;
+        if (keyCode !== null) this.keysDown[keyCode] = false
     }
 }
