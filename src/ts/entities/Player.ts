@@ -17,6 +17,8 @@ import SpriteSheet from "../SpriteSheet";
 
 import Bullet from "./Bullet";
 import Entity from "./Entity";
+import { ChunkData } from "../types/ChunkData";
+import MathHelper from "../helpers/MathHelper";
 
 export default class Player extends Entity {
     public override spriteSheet : SpriteSheet = new SpriteSheet('../assets/img/player.png');
@@ -34,7 +36,7 @@ export default class Player extends Entity {
     public movingLeft : boolean = false;
     public movingRight : boolean = false;
     
-    public speed : Vector2 = new Vector2(0.25, 0.30);
+    public speed : Vector2 = new Vector2(0.60, 0.50);
     public speedA : Vector2;
     
     private keysDown : Array<boolean> = new Array<boolean>();
@@ -80,7 +82,7 @@ export default class Player extends Entity {
     }
 
     public tick() : void
-    {
+    {            
         this.keyboardMove();
 
         const canvas : HTMLCanvasElement = this.level.context.canvas as HTMLCanvasElement;
@@ -89,9 +91,23 @@ export default class Player extends Entity {
 
         const min : Vector2 = new Vector2(offset, offset);
         const max : Vector2 = new Vector2(canvas.width - offset, canvas.height - offset);
-        
+     
+        console.log(this.pos);
+
+        const currentChunkData : ChunkData = this.level.chunksData[this.level.currentChunk];
+
+        if (Array.isArray(currentChunkData.escapePoint) && !(currentChunkData.escapePoint instanceof Vector2)) {
+            for (const point of currentChunkData.escapePoint) {
+                //if (new Vector2(Math.floor(this.pos.x), Math.floor(this.pos.y)).equals(point)) this.goToNextChunk();
+                if (MathHelper.isInRange(this.pos.x, [point.x - GameScreen.SCALE, point.x]) 
+                    && MathHelper.isInRange(this.pos.y, [point.y - GameScreen.SCALE, point.y])) this.goToNextChunk();
+            }
+        }
+        else if (MathHelper.isInRange(this.pos.x, [currentChunkData.escapePoint.x - GameScreen.SCALE, currentChunkData.escapePoint.x]) 
+            && MathHelper.isInRange(this.pos.y, [currentChunkData.escapePoint.y - GameScreen.SCALE, currentChunkData.escapePoint.y])) this.goToNextChunk();
+
         if (this.pos.x < min.x) this.pos.x = min.x;
-        if (this.pos.x > max.x) this.goToNextChunk();
+        if (this.pos.x > max.x) this.pos.x = max.x;
         if (this.pos.y < min.y) this.pos.y = min.y;
         if (this.pos.y > max.y) this.pos.y = max.y;
         
@@ -190,8 +206,8 @@ export default class Player extends Entity {
 
     private goToNextChunk() : void
     {
-        this.pos.x = Level.OFFSET / 2;
         this.level.currentChunk++;
+        this.pos = this.level.chunksData[this.level.currentChunk].spawnPoint;
         this.level.refresh();
     }
 

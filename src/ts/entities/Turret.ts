@@ -50,7 +50,7 @@ export default class Turret extends Enemy {
     {
         this.shooting = true;
 
-        this.level.add(new Bullet(this.level, this.pos.clone().sub(new Vector2(0.0, 8.0)), this.size.clone().divideScalar(2.0), 0.25, this.direction === 0 ? 3 : 2, this));
-        this.level.add(new Bullet(this.level, this.pos.clone().add(new Vector2(0.0, 16.0)), this.size.clone().divideScalar(2.0), 0.25, this.direction === 0 ? 4 : 5, this));
+        this.level.add(new Bullet(this.level, this.pos.clone().sub(new Vector2(0.0, 8.0)), this.size.clone().divideScalar(2.0), 0.60, this.direction === 0 ? 3 : 2, this));
+        this.level.add(new Bullet(this.level, this.pos.clone().add(new Vector2(0.0, 16.0)), this.size.clone().divideScalar(2.0), 0.60, this.direction === 0 ? 4 : 5, this));
     }
 }

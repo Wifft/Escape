@@ -13,9 +13,7 @@ export default class Womba extends Enemy
 {
     public direction : number;
 
-    public moving : boolean = false;
-    
-    private speed : number = 0.50; 
+    protected speed : number = 1.25; 
 
     public constructor(level : Level, sPos : Vector2, pos : Vector2, size : Vector2, direction : number)
     {
@@ -28,6 +26,9 @@ export default class Womba extends Enemy
     {
         this.tick();
 
+        this.sPos = new Vector2(16 * 6, 0.0)
+        if (this.moving) this.sPos = new Vector2(16 * 5, 0.0);
+
         super.render(this.level.context);
     }
 
@@ -38,13 +39,5 @@ export default class Womba extends Enemy
         if (this.moving) this.tryMove();
         
         super.tick();
-    }
-
-    private tryMove() : void
-    {
-        super.updateDirection();
-
-        if (this.direction === 0) this.pos.x -= this.speed;
-        else if (this.direction === 1) this.pos.x += this.speed;
     }
 }

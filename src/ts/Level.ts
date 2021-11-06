@@ -5,9 +5,13 @@ import C2D from "./helpers/C2D";
 import Collidable from "./interfaces/Collidable";
 import Renderable from "./interfaces/Renderable";
 
+import { ChunkData } from "./types/ChunkData";
+
 import Brick from "./blocks/Brick";
-import Gear from "./blocks/Gear";
+import CrackedBrick from "./blocks/CrackedBrick";
 import Ground from "./blocks/Ground";
+import CrackedGround from "./blocks/CrackedGround";
+import Gear from "./blocks/Gear";
 
 import Mine from "./entities/Mine";
 import Player from "./entities/Player";
@@ -16,21 +20,24 @@ import Womba from "./entities/Womba";
 
 import Bitmap from "./Bitmap";
 import Pixel from "./Pixel";
+import ChunkBuilder from "./ChunkBuilder";
+
 export default class Level
 {
     public static readonly OFFSET = 32.0;
+
+    public context : C2D;
+
+    public currentChunk : number = 0;
+    public chunksData : Array<ChunkData> = ChunkBuilder.getAllChunks();
 
     private renderables = new Array<Renderable>();
     private collidables = new Array<Collidable>();
 
     private pixels = new Array<Pixel>();
 
-    public context : C2D;
-
     private bitmap : Bitmap = new Bitmap('../../assets/img/bitmap.png');
     
-    public currentChunk : number = 1;
-
     public constructor(context : C2D)
     {
         this.context = context;
@@ -64,13 +71,33 @@ export default class Level
                                 this.add(new Brick(p.pos));
 
                                 break;
+                            case 0x408080ff:
+                                this.add(new Brick(p.pos, 1));
+
+                                break;
+                            case 0x8ef2f2ff:
+                                this.add(new CrackedBrick(p.pos));
+
+                                break;
+                            case 0xff0080ff:
+                                this.add(new CrackedBrick(p.pos, 1));
+
+                                break;
                             case 0x008000ff:
                                 this.add(new Ground(p.pos));
 
                                 break;
-                            case 0x00ff00ff:
-                                this.add(new Ground(p.pos));
-                                
+                            case 0x400040ff:
+                                this.add(new Ground(p.pos, 1));
+
+                                break;
+                            case 0xc8bfe7ff:
+                                this.add(new CrackedGround(p.pos));
+
+                                break;
+                            case 0xe9cd07ff:
+                                this.add(new CrackedGround(p.pos, 1));
+
                                 break;
                             case 0xa349a4ff:
                                 this.add(new Gear(p.pos));
@@ -89,7 +116,7 @@ export default class Level
                                 
                                 break;
                             case 0xa4fe1dff:
-                                this.add(new Womba(this, new Vector2(16.0 * 5, 0.0), p.pos, new Vector2(32.0, 32.0), 1));
+                                this.add(new Womba(this, new Vector2(16.0 * 6, 0.0), p.pos, new Vector2(32.0, 32.0), 1));
                                 
                                 break;
                         }
@@ -135,7 +162,7 @@ export default class Level
     
     private async loadPixels() : Promise<void|Pixel>
     {
-        return this.bitmap.getImageData(this.currentChunk, this.context.canvas).then(
+        return this.bitmap.getImageData(this.chunksData[this.currentChunk].bitmapPos, this.context.canvas).then(
             (bitmapData : Uint8ClampedArray) : void => {                
                 const currentPixelPosition = new Vector2(0.0, 0.0);
 

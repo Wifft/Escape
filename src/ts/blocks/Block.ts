@@ -9,6 +9,7 @@ import SpriteSheet from "../SpriteSheet";
 
 export default abstract class Block implements Renderable, Collidable {
     public abstract sPos : Vector2;
+    protected abstract variant : number;
 
     public sSize : Vector2;
 
