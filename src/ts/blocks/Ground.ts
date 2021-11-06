@@ -4,7 +4,7 @@ import Block from "./Block";
 
 export default class Ground extends Block
 {
-    public override sPos = new Vector2(32.0, 0.0);
+    public sPos = new Vector2(48.0, 0.0);
 
     public constructor(pos : Vector2)
     {  

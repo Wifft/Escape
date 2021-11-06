@@ -3,20 +3,20 @@ import { Vector2 } from "@math.gl/core";
 import C2D from "../helpers/C2D";
 
 import { Keys } from "../enum/Key";
-import Renderable from "../interfaces/Renderable";
 
 import Input from "../controllers/Input";
 
+import GameScreen from "../screens/GameScreen";
+
 import Collider from "../phys/Collider";
+
+import Gear from "../blocks/Gear";
 
 import Level from "../Level";
 import SpriteSheet from "../SpriteSheet";
 
 import Bullet from "./Bullet";
 import Entity from "./Entity";
-import Gear from "../blocks/Gear";
-import GameScreen from "../screens/GameScreen";
-import Collidable from "../interfaces/Collidable";
 
 export default class Player extends Entity {
     public override spriteSheet : SpriteSheet = new SpriteSheet('../assets/img/player.png');
@@ -34,8 +34,8 @@ export default class Player extends Entity {
     public movingLeft : boolean = false;
     public movingRight : boolean = false;
     
-    public speed : number = 0.60;
-    public speedA : number = 0.60;
+    public speed : Vector2 = new Vector2(0.25, 0.30);
+    public speedA : Vector2;
     
     private keysDown : Array<boolean> = new Array<boolean>();
 
@@ -47,6 +47,8 @@ export default class Player extends Entity {
 
         this.level = level;
         this.img = this.spriteSheet.load();
+
+        this.speedA = this.speed.clone();
 
         window.onkeydown = (e : KeyboardEvent) => this.onKeyDown(e);
         window.onkeyup = (e : KeyboardEvent) => this.onKeyUp(e);
@@ -123,7 +125,7 @@ export default class Player extends Entity {
             this.falling = true;
         }
 
-        if (this.falling && !this.grounded) this.pos.y += this.speed;
+        if (this.falling && !this.grounded) this.pos.y += this.speed.x;
 
         this.speed = this.speedA;
 
@@ -138,20 +140,20 @@ export default class Player extends Entity {
         }
 
         if (this.keysDown[Keys.A]) {
-            this.pos.x -= this.speed;
+            this.pos.x -= this.speed.x;
             this.movingLeft = true;
             this.movingRight = false;
             this.direction = 0;
         }
         
         if (this.keysDown[Keys.D]) {
-            this.pos.x += this.speed; 
+            this.pos.x += this.speed.x; 
             this.movingLeft = false;
             this.movingRight = true;
             this.direction = 1;
         }
 
-        if (this.keysDown[Keys.E] && !this.shooting) this.tryShoot();
+        if (this.keysDown[Keys.E] && !this.shooting && this.direction !== null) this.tryShoot();
 
         if (!this.keysDown.find((element : boolean) => element === true)) {
             this.shooting = false;
@@ -168,7 +170,7 @@ export default class Player extends Entity {
             this.grounded = false;
             this.falling = false;
 
-            this.pos.y -= this.speed;
+            this.pos.y -= this.speed.y;
 
             if (this.pos.y < this.posA.y - maxHeight) {
                 this.jumping = false;
@@ -183,12 +185,12 @@ export default class Player extends Entity {
 
         const size = new Vector2(16.0, 16.0);
 
-        this.level.add(new Bullet(this.level, this.pos.clone(), size, this.speed, this.direction as number, this));
+        this.level.add(new Bullet(this.level, this.pos.clone(), size, this.speed.x, this.direction as number, this));
     }
 
     private goToNextChunk() : void
     {
-        this.pos.x = Level.OFFSET;
+        this.pos.x = Level.OFFSET / 2;
         this.level.currentChunk++;
         this.level.refresh();
     }

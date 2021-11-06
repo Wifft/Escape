@@ -1,4 +1,5 @@
 import C2D from "./helpers/C2D";
+
 import Level from "./Level";
 
 export default class Bitmap {

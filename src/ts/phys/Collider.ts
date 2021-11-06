@@ -41,7 +41,7 @@ export default class Collider {
             dist.x > 0 ? dir = "r" : dir = "l";
             dist.x > 0 ? source.pos.x += xo : source.pos.x -= xo;
         }
-
+        
         return dir;
     }
 

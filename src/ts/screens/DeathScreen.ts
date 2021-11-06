@@ -16,7 +16,7 @@ export default class DeathScreen extends Screen {
 
         const offset : number = 8.0;
 
-        const size : Vector2 = new Vector2(200, 100);
+        const size : Vector2 = new Vector2(250, 100);
         const pos : Vector2 = new Vector2(
             (canvas.width - size.x) / 2,
             (canvas.height - size.y) / 2
@@ -29,10 +29,14 @@ export default class DeathScreen extends Screen {
         color = new Vector4(0.0, 255.0, 255.0, 1.0);
 
         pos.add(size.clone().divideScalar(2.0));
-        pos.x -= offset * 6.0;
-        pos.y += offset * 0.75;
+        pos.x -= offset * 10.0;
+        pos.y += 0.75;
         
-        C2D.renderText(this.context, "Game over!", "24px Consolas", pos, size.y, color)
+        C2D.renderText(this.context, "Game over!", "16px MMRock9", pos, size.x, color);
+        
+        pos.x -= (offset * 4.0) + (offset / 2);
+        pos.y += offset * 3;
+        C2D.renderText(this.context, ">Press F5 to try again<", "10px MMRock9", pos, size.x, color);
     }
 
     private renderOverlay(canvas : HTMLCanvasElement) : void

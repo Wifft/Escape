@@ -1,5 +1,4 @@
-import { Vector2, Vector4 } from "@math.gl/core";
-import Collidable from "../interfaces/Collidable";
+import { Vector2 } from "@math.gl/core";
 
 import Renderable from "../interfaces/Renderable";
 
@@ -10,8 +9,6 @@ import Entity from "./Entity";
 import Player from "./Player";
 
 export default class Bullet extends Entity {
-    public level : Level;
-
     public speed : number;
     
     public source : Entity;

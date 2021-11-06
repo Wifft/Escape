@@ -5,6 +5,7 @@ import C2D from "../helpers/C2D";
 import Player from "../entities/Player";
 
 import Level from "../Level";
+import Timer from "../Timer";
 
 import Screen from "./Screen";
 
@@ -15,6 +16,8 @@ export default class GameScreen extends Screen {
     
     private level : Level;
     private player : Player|null = null;
+
+    private timer : Timer = new Timer();
 
     public constructor(context : C2D)
     {
@@ -40,8 +43,9 @@ export default class GameScreen extends Screen {
     }
 
     public override render() : void
-    {
+    {   
         this.level.render();
+        this.timer.render(this.context);
     }
 
     private summonPlayer() : Player

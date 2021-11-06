@@ -1,4 +1,4 @@
-import { Vector2, Vector4 } from "@math.gl/core";
+import { Vector2 } from "@math.gl/core";
 
 import C2D from "../helpers/C2D";
 
@@ -38,7 +38,7 @@ export default abstract class Entity implements Renderable
 
     public render(context : C2D) : void
     {
-        C2D.drawImage(context, this.img, this.sPos, this.sSize.clone().sub(new Vector2(1.0, 0.0)), this.pos, this.size);
+        C2D.drawImage(context, this.img, new Vector2(Math.floor(this.sPos.x), Math.floor(this.sPos.y)), this.sSize, this.pos, this.size);
     }
 
     protected isColliding() : boolean

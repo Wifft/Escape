@@ -1,5 +1,3 @@
-import C2D from "./helpers/C2D";
-
 export default class SpriteSheet {
     public width : number = 0;
     public height : number = 0;

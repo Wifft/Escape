@@ -6,17 +6,16 @@ import Collidable from "./interfaces/Collidable";
 import Renderable from "./interfaces/Renderable";
 
 import Brick from "./blocks/Brick";
-import Wall from "./blocks/Wall";
+import Gear from "./blocks/Gear";
 import Ground from "./blocks/Ground";
 
-import Enemy from "./entities/Enemy";
+import Mine from "./entities/Mine";
+import Player from "./entities/Player";
+import Turret from "./entities/Turret";
+import Womba from "./entities/Womba";
 
 import Bitmap from "./Bitmap";
 import Pixel from "./Pixel";
-import Gear from "./blocks/Gear";
-import Player from "./entities/Player";
-import Turret from "./entities/Turret";
-
 export default class Level
 {
     public static readonly OFFSET = 32.0;
@@ -46,8 +45,9 @@ export default class Level
     public refresh() : void
     {
         this.pixels = [];
+        this.collidables = [];
+        
         this.renderables = this.renderables.filter((r : Renderable) : boolean => r instanceof Player);
-        this.collidables = this.collidables.filter((c : Collidable) : boolean => c instanceof Player);
 
         this.loadPixels();
         this.addBlocks();
@@ -61,19 +61,15 @@ export default class Level
                     (p : Pixel) : void => {
                         switch (p.colorHex) {
                             case 0xff0000ff:
-                                this.add(new Brick(p.pos, 0));
+                                this.add(new Brick(p.pos));
 
                                 break;
                             case 0x008000ff:
-                                this.add(new Brick(p.pos, 1));
+                                this.add(new Ground(p.pos));
 
                                 break;
                             case 0x00ff00ff:
                                 this.add(new Ground(p.pos));
-                                
-                                break;
-                            case 0x0000ffff:
-                                this.add(new Wall(p.pos));
                                 
                                 break;
                             case 0xa349a4ff:
@@ -81,11 +77,19 @@ export default class Level
                                 
                                 break;
                             case 0xc3c3c3ff:
-                                this.add(new Turret(this, new Vector2(16.0, 0.0), new Vector2(32.0, 32.0).clone().divideScalar(2), p.pos, new Vector2(32.0, 32.0), 0));
+                                this.add(new Turret(this, new Vector2(16.0, 0.0), p.pos, new Vector2(32.0, 32.0), 0));
                                 
                                 break;
                             case 0xc4c4c4ff:
-                                this.add(new Turret(this, new Vector2(48.0, 0.0), new Vector2(32.0, 32.0).divideScalar(2), p.pos, new Vector2(32.0, 32.0), 1));
+                                this.add(new Turret(this, new Vector2(16.0 * 3, 0.0), p.pos, new Vector2(32.0, 32.0), 1));
+                                
+                                break;
+                            case 0x33c69aff:
+                                this.add(new Mine(this, new Vector2(16.0 * 7, 0.0), p.pos, new Vector2(32.0, 32.0), 1));
+                                
+                                break;
+                            case 0xa4fe1dff:
+                                this.add(new Womba(this, new Vector2(16.0 * 5, 0.0), p.pos, new Vector2(32.0, 32.0), 1));
                                 
                                 break;
                         }
