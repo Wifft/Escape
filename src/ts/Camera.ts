@@ -2,7 +2,7 @@ import { Vector2 } from "@math.gl/core";
 import Level from "./Level";
 import { ChunkData } from "./types/ChunkData";
 
-export default class ChunkBuilder
+export default class Camera
 {
     public static getAllChunks() : Array<ChunkData>
     {

@@ -13,5 +13,5 @@ export default interface Renderable {
     spriteSheet : SpriteSheet
     img : HTMLImageElement
     
-    render(context : C2D) : void
+    render() : void
 }

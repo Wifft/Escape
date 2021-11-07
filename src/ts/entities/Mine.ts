@@ -12,9 +12,9 @@ export default class Mine extends Enemy
 
     protected speed : number = 1.50;
 
-    public constructor(level : Level, sPos : Vector2, pos : Vector2, size : Vector2, direction : number)
+    public constructor(level : Level, sPos : Vector2, pos : Vector2, direction : number)
     {
-        super(level, sPos, pos, size);
+        super(level, sPos, pos);
 
         this.direction = direction;
     }
@@ -23,7 +23,7 @@ export default class Mine extends Enemy
     {
         this.tick();
 
-        super.render(this.level.context);
+        super.render();
     }
 
     protected override tick() : void

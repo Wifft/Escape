@@ -15,16 +15,16 @@ export default class Turret extends Enemy {
 
     private sPosA : Vector2;
 
-    public constructor(level : Level, sPos : Vector2, pos : Vector2, size : Vector2, direction : number)
+    public constructor(level : Level, sPos : Vector2, pos : Vector2, direction : number)
     {
-        super(level, sPos, pos, size);
+        super(level, sPos, pos);
 
         this.direction = direction;
 
         this.sPosA = this.sPos.clone();
     }
 
-    public override render(context : C2D)
+    public override render()
     {
         this.tick();
 
@@ -35,7 +35,7 @@ export default class Turret extends Enemy {
         if (this.shooting && this.direction === 0) this.sPos.x = offset * 2; 
         else if (this.shooting && this.direction === 1) this.sPos.x = offset * 4; 
 
-        super.render(context);
+        super.render();
     }
 
     protected override tick() : void
@@ -50,7 +50,7 @@ export default class Turret extends Enemy {
     {
         this.shooting = true;
 
-        this.level.add(new Bullet(this.level, this.pos.clone().sub(new Vector2(0.0, 8.0)), this.size.clone().divideScalar(2.0), 0.60, this.direction === 0 ? 3 : 2, this));
-        this.level.add(new Bullet(this.level, this.pos.clone().add(new Vector2(0.0, 16.0)), this.size.clone().divideScalar(2.0), 0.60, this.direction === 0 ? 4 : 5, this));
+        this.level.add(new Bullet(this.level, this.pos.clone().sub(new Vector2(0.0, 8.0)), 0.60, this.direction === 0 ? 3 : 2, this));
+        this.level.add(new Bullet(this.level, this.pos.clone().add(new Vector2(0.0, 16.0)), 0.60, this.direction === 0 ? 4 : 5, this));
     }
 }

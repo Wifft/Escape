@@ -1,0 +1,11 @@
+Done:
+- Health system.
+- 0 health points = death.
+- Respawn
+- Hurt animation
+- Item gathering
+- Kill enemies
+
+ToDo:
+- Chiseled blocks
+- Entrenched mob

@@ -51,11 +51,9 @@ export default class GameScreen extends Screen {
     private summonPlayer() : Player
     {
         const sPos = new Vector2();
-        const sSize = new Vector2();
         
-        const pos : Vector2 = this.level.chunksData[this.level.currentChunk].spawnPoint;
-        const size : Vector2 = new Vector2(GameScreen.SCALE, GameScreen.SCALE + (GameScreen.SCALE / 2));
+        const pos : Vector2 = this.level.chunksData[this.level.currentChunk].spawnPoint.clone();
         
-        return new Player(this.level, sPos, sSize, pos, size);
+        return new Player(this.level, sPos, pos);
     }
 }

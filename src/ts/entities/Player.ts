@@ -1,12 +1,15 @@
 import { Vector2 } from "@math.gl/core";
 
 import C2D from "../helpers/C2D";
+import MathHelper from "../helpers/MathHelper";
 
 import { Keys } from "../enum/Key";
 
 import Input from "../controllers/Input";
 
 import GameScreen from "../screens/GameScreen";
+
+import { ChunkData } from "../types/ChunkData";
 
 import Collider from "../phys/Collider";
 
@@ -17,10 +20,12 @@ import SpriteSheet from "../SpriteSheet";
 
 import Bullet from "./Bullet";
 import Entity from "./Entity";
-import { ChunkData } from "../types/ChunkData";
-import MathHelper from "../helpers/MathHelper";
+import Enemy from "./Enemy";
 
 export default class Player extends Entity {
+    public override size : Vector2 = new Vector2(GameScreen.SCALE, GameScreen.SCALE + (GameScreen.SCALE / 2));
+    public override sSize : Vector2 = new Vector2(GameScreen.SCALE, GameScreen.SCALE + (GameScreen.SCALE / 2));
+
     public override spriteSheet : SpriteSheet = new SpriteSheet('../assets/img/player.png');
     public override img : HTMLImageElement;
 
@@ -29,23 +34,25 @@ export default class Player extends Entity {
     public jumping : boolean = false;
     public falling : boolean = false;
     public grounded : boolean = true;
+    public hurted : boolean = false;
     public shooting : boolean = false;
+    public hasGun : boolean = false;
 
     public alive : boolean = true;
 
     public movingLeft : boolean = false;
     public movingRight : boolean = false;
     
-    public speed : Vector2 = new Vector2(0.60, 0.50);
+    public speed : Vector2 = new Vector2(0.50, 0.60);
     public speedA : Vector2;
     
     private keysDown : Array<boolean> = new Array<boolean>();
 
     private posA : Vector2 = new Vector2();
 
-    public constructor(level : Level, sPos : Vector2, sSize : Vector2,  pos : Vector2, size : Vector2)
+    public constructor(level : Level, sPos : Vector2,  pos : Vector2)
     {
-        super(level, sPos, sSize, pos, size);
+        super(level, sPos, pos);
 
         this.level = level;
         this.img = this.spriteSheet.load();
@@ -56,7 +63,7 @@ export default class Player extends Entity {
         window.onkeyup = (e : KeyboardEvent) => this.onKeyUp(e);
     }
 
-    public override render(context : C2D) : void
+    public override render() : void
     {
         let spritePos : number = 0.0;
 
@@ -65,12 +72,16 @@ export default class Player extends Entity {
         else if (this.movingLeft) spritePos = GameScreen.SCALE * 3;
         else if (this.direction === 0) spritePos = GameScreen.SCALE * 5;
         else if (this.direction === 1) spritePos = GameScreen.SCALE * 4;
-
+        
         this.sPos = new Vector2(spritePos, 0.0);
+        if (this.hurted) this.sPos = new Vector2(spritePos, this.size.y);
+        else if (this.hasGun) this.sPos = new Vector2(spritePos, this.size.y * 2);
+        else if (this.hurted && this.hasGun) this.sPos = new Vector2(spritePos, this.size.y * 3);
+        
         if (!this.alive) {
             spritePos = GameScreen.SCALE * 6;
 
-            this.size = new Vector2(48.0, GameScreen.SCALE - 8.0);
+            this.size = new Vector2(this.size.y, GameScreen.SCALE - 8.0);
             
             this.sPos = new Vector2(spritePos, this.direction === 0 ? 24.0 : 0.0);
             this.sSize = this.size;
@@ -78,11 +89,13 @@ export default class Player extends Entity {
         
         this.sSize = this.size;
 
-        C2D.drawImage(context, this.img, this.sPos, this.sSize, this.pos, this.size);
+        C2D.drawImage(this.level.context, this.img, this.sPos, this.sSize, this.pos, this.size);
     }
 
     public tick() : void
-    {            
+    {
+        if (this.health === 0.0) this.alive = false;
+
         this.keyboardMove();
 
         const canvas : HTMLCanvasElement = this.level.context.canvas as HTMLCanvasElement;
@@ -98,7 +111,6 @@ export default class Player extends Entity {
 
         if (Array.isArray(currentChunkData.escapePoint) && !(currentChunkData.escapePoint instanceof Vector2)) {
             for (const point of currentChunkData.escapePoint) {
-                //if (new Vector2(Math.floor(this.pos.x), Math.floor(this.pos.y)).equals(point)) this.goToNextChunk();
                 if (MathHelper.isInRange(this.pos.x, [point.x - GameScreen.SCALE, point.x]) 
                     && MathHelper.isInRange(this.pos.y, [point.y - GameScreen.SCALE, point.y])) this.goToNextChunk();
             }
@@ -115,7 +127,7 @@ export default class Player extends Entity {
             const dir : string|null = Collider.checkCollision(this, collidable);
 
             if (dir !== null) {
-                if (collidable instanceof Gear) this.alive = false;
+                if (collidable instanceof Gear) this.getDamage();
                 
                 switch (dir) {
                     case "b":
@@ -148,6 +160,19 @@ export default class Player extends Entity {
         this.tryJump();
     }
 
+    public getDamage() : void
+    {
+        this.hurted = true;
+
+        this.health--;
+        
+        this.level.refresh();
+
+        this.pos = this.level.chunksData[this.level.currentChunk].spawnPoint.clone();
+
+        setTimeout(() => this.hurted = false, 1000 / 4);
+    }
+
     private keyboardMove() : void
     {
         if (this.keysDown[Keys.W] && this.grounded) {
@@ -169,7 +194,7 @@ export default class Player extends Entity {
             this.direction = 1;
         }
 
-        if (this.keysDown[Keys.E] && !this.shooting && this.direction !== null) this.tryShoot();
+        if (this.keysDown[Keys.E] && this.hasGun && !this.shooting && this.direction !== null) this.tryShoot();
 
         if (!this.keysDown.find((element : boolean) => element === true)) {
             this.shooting = false;
@@ -199,15 +224,13 @@ export default class Player extends Entity {
     {
         this.shooting = true;
 
-        const size = new Vector2(16.0, 16.0);
-
-        this.level.add(new Bullet(this.level, this.pos.clone(), size, this.speed.x, this.direction as number, this));
+        this.level.add(new Bullet(this.level, this.pos.clone(), this.speed.x, this.direction as number, this));
     }
 
     private goToNextChunk() : void
     {
         this.level.currentChunk++;
-        this.pos = this.level.chunksData[this.level.currentChunk].spawnPoint;
+        this.pos = this.level.chunksData[this.level.currentChunk].spawnPoint.clone();
         this.level.refresh();
     }
 

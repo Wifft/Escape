@@ -1,5 +1,6 @@
 import { Vector2  } from "@math.gl/core";
-import C2D from "../helpers/C2D";
+
+import Level from "../Level";
 
 import Block from "./Block";
 
@@ -9,14 +10,14 @@ export default class Ground extends Block
     
     protected variant : number;
 
-    public constructor(pos : Vector2, variant = 0)
+    public constructor(level : Level, pos : Vector2, variant = 0)
     {  
-        super(pos);
+        super(level, pos);
 
         this.variant = variant;
     }
 
-    public override render(context : C2D) : void
+    public override render() : void
     {
         switch (this.variant) {
             case 0:
@@ -29,6 +30,6 @@ export default class Ground extends Block
                 break;
         }
 
-        super.render(context);
+        super.render();
     }
 }

@@ -41,8 +41,8 @@ export default class C2D extends CanvasRenderingContext2D {
         context.shadowBlur = blur;
         context.shadowOffsetX = offset.x;
         context.shadowOffsetY = offset.y;
-    } 
-
+    }
+    
     public static drawImage(context : C2D, source : HTMLImageElement, sPos : Vector2, sSize : Vector2, dPos : Vector2, dSize : Vector2) : void
     {
         context.drawImage(source, sPos.x, sPos.y, sSize.x, sSize.y, dPos.x, dPos.y, dSize.x, dSize.y);

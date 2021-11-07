@@ -20,7 +20,9 @@ import Womba from "./entities/Womba";
 
 import Bitmap from "./Bitmap";
 import Pixel from "./Pixel";
-import ChunkBuilder from "./ChunkBuilder";
+import Camera from "./Camera";
+import { Hearth } from "./items/Hearth";
+import { Gun } from "./items/Gun";
 
 export default class Level
 {
@@ -29,14 +31,14 @@ export default class Level
     public context : C2D;
 
     public currentChunk : number = 0;
-    public chunksData : Array<ChunkData> = ChunkBuilder.getAllChunks();
+    public chunksData : Array<ChunkData> = Camera.getAllChunks();
 
     private renderables = new Array<Renderable>();
     private collidables = new Array<Collidable>();
 
     private pixels = new Array<Pixel>();
 
-    private bitmap : Bitmap = new Bitmap('../../assets/img/bitmap.png');
+    private bitmap : Bitmap = new Bitmap('../../assets/img/level.png');
     
     public constructor(context : C2D)
     {
@@ -60,6 +62,11 @@ export default class Level
         this.addBlocks();
     }
 
+    public getPlayer() : Player
+    {
+        return this.renderables.filter((r : Renderable) : boolean => r instanceof Player)[0] as Player;
+    }
+
     private addBlocks() : void
     {
         this.loadPixels().then(
@@ -68,55 +75,63 @@ export default class Level
                     (p : Pixel) : void => {
                         switch (p.colorHex) {
                             case 0xff0000ff:
-                                this.add(new Brick(p.pos));
+                                this.add(new Brick(this, p.pos));
 
                                 break;
                             case 0x408080ff:
-                                this.add(new Brick(p.pos, 1));
+                                this.add(new Brick(this, p.pos, 1));
 
                                 break;
                             case 0x8ef2f2ff:
-                                this.add(new CrackedBrick(p.pos));
+                                this.add(new CrackedBrick(this, p.pos));
 
                                 break;
                             case 0xff0080ff:
-                                this.add(new CrackedBrick(p.pos, 1));
+                                this.add(new CrackedBrick(this, p.pos, 1));
 
                                 break;
                             case 0x008000ff:
-                                this.add(new Ground(p.pos));
+                                this.add(new Ground(this, p.pos));
 
                                 break;
                             case 0x400040ff:
-                                this.add(new Ground(p.pos, 1));
+                                this.add(new Ground(this, p.pos, 1));
 
                                 break;
                             case 0xc8bfe7ff:
-                                this.add(new CrackedGround(p.pos));
+                                this.add(new CrackedGround(this, p.pos));
 
                                 break;
                             case 0xe9cd07ff:
-                                this.add(new CrackedGround(p.pos, 1));
+                                this.add(new CrackedGround(this, p.pos, 1));
 
                                 break;
                             case 0xa349a4ff:
-                                this.add(new Gear(p.pos));
+                                this.add(new Gear(this, p.pos));
                                 
                                 break;
                             case 0xc3c3c3ff:
-                                this.add(new Turret(this, new Vector2(16.0, 0.0), p.pos, new Vector2(32.0, 32.0), 0));
+                                this.add(new Turret(this, new Vector2(16.0, 0.0), p.pos, 0));
                                 
                                 break;
                             case 0xc4c4c4ff:
-                                this.add(new Turret(this, new Vector2(16.0 * 3, 0.0), p.pos, new Vector2(32.0, 32.0), 1));
+                                this.add(new Turret(this, new Vector2(16.0 * 3, 0.0), p.pos, 1));
                                 
                                 break;
                             case 0x33c69aff:
-                                this.add(new Mine(this, new Vector2(16.0 * 7, 0.0), p.pos, new Vector2(32.0, 32.0), 1));
+                                this.add(new Mine(this, new Vector2(16.0 * 7, 0.0), p.pos, 1));
                                 
                                 break;
                             case 0xa4fe1dff:
-                                this.add(new Womba(this, new Vector2(16.0 * 6, 0.0), p.pos, new Vector2(32.0, 32.0), 1));
+                                this.add(new Womba(this, new Vector2(16.0 * 6, 0.0), p.pos, 1));
+                                
+                                break;
+                            case 0x8a0b11ff:
+                                this.add(new Hearth(this, p.pos));
+                                
+                                break;
+                            case 0x5f363dff:
+                                this.add(new Gun(this, p.pos));
                                 
                                 break;
                         }
@@ -157,7 +172,7 @@ export default class Level
     {
         C2D.disableImageSmoothing(this.context);
 
-        this.getAllRenderables().forEach((r : Renderable) : void => r.render(this.context));
+        this.getAllRenderables().forEach((r : Renderable) : void => r.render());
     }
     
     private async loadPixels() : Promise<void|Pixel>

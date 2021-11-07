@@ -8,37 +8,37 @@ import Collider from "../phys/Collider";
 
 import Level from "../Level";
 import SpriteSheet from "../SpriteSheet";
+import GameScreen from "../screens/GameScreen";
 
 export default abstract class Entity implements Renderable
 {
     public sPos : Vector2;
-    public sSize : Vector2;
+    public sSize : Vector2 = new Vector2(GameScreen.SCALE / 2, GameScreen.SCALE / 2);
 
     public pos : Vector2;
-    public size : Vector2;
+    public size : Vector2 = new Vector2(GameScreen.SCALE, GameScreen.SCALE);
 
     public spriteSheet = new SpriteSheet('../assets/img/entities.png');
     public img : HTMLImageElement;
 
+    public direction : number|null = 0;
+    public health : number = 3.0;
+    
     protected level : Level;
 
-    public direction : number|null = 0;
-
-    public constructor(level : Level, sPos : Vector2, sSize : Vector2, pos : Vector2, size : Vector2)
+    public constructor(level : Level, sPos : Vector2, pos : Vector2)
     {   this.sPos = sPos;
-        this.sSize = sSize;
 
         this.pos = pos;
-        this.size = size;
         
         this.img = this.spriteSheet.load();
 
         this.level = level;
     }
 
-    public render(context : C2D) : void
+    public render() : void
     {
-        C2D.drawImage(context, this.img, new Vector2(Math.floor(this.sPos.x), Math.floor(this.sPos.y)), this.sSize, this.pos, this.size);
+        C2D.drawImage(this.level.context, this.img, new Vector2(Math.floor(this.sPos.x), Math.floor(this.sPos.y)), this.sSize, this.pos, this.size);
     }
 
     protected isColliding() : boolean

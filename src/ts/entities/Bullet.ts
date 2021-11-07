@@ -1,24 +1,25 @@
 import { Vector2 } from "@math.gl/core";
+import Collidable from "../interfaces/Collidable";
 
 import Renderable from "../interfaces/Renderable";
 
 import Level from "../Level";
 import Collider from "../phys/Collider";
+import Enemy from "./Enemy";
 
 import Entity from "./Entity";
 import Player from "./Player";
 
 export default class Bullet extends Entity {
+    public override size : Vector2 = new Vector2(16.0, 16.0);
+
     public speed : number;
     
     public source : Entity;
     
-    public constructor(level : Level, pos : Vector2, size : Vector2, speed : number, direction : number, source : Entity)
+    public constructor(level : Level, pos : Vector2, speed : number, direction : number, source : Entity)
     {
-        const sPos : Vector2 = new Vector2(0.0, 0.0);
-        const sSize : Vector2 = new Vector2(16.0, 16.0);
-
-        super(level, sPos, sSize, pos, size);
+        super(level, new Vector2(0.0, 0.0), pos);
 
         this.level = level;
         this.speed = speed * 4;
@@ -29,10 +30,22 @@ export default class Bullet extends Entity {
 
     public render() : void
     {
-        if (!super.isInChunk() || (super.intersects() && this.source instanceof Player)) this.level.remove(this as Renderable);
-        if (!(this.source instanceof Player)) {
+        if (!super.isInChunk() || (super.intersects() && this.source instanceof Player)) this.level.remove(this);
+        else if (this.source instanceof Player) {
             for (const renderable of this.level.getAllRenderables()) {
-                if (renderable instanceof Player && Collider.intersects(this, renderable as any)) renderable.alive = false;
+                if (renderable instanceof Enemy && Collider.intersects(this, renderable as any)) {
+                    renderable.health--;
+
+                    this.level.remove(this);
+                }
+            }
+        }
+        else if (!(this.source instanceof Player)) {
+            const player : Player = this.level.getPlayer();
+
+            if (Collider.intersects(this, player as any)) {
+                player.getDamage();
+                this.level.remove(this);
             }
         }
 
@@ -67,6 +80,6 @@ export default class Bullet extends Entity {
                 break;
         }
         
-        super.render(this.level.context);
+        super.render();
     }
 }

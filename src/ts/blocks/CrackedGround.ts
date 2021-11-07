@@ -1,16 +1,19 @@
 import { Vector2 } from "@math.gl/core";
+
 import C2D from "../helpers/C2D";
+
+import Level from "../Level";
 
 import Ground from "./Ground";
 
 export default class CrackedGround extends Ground
 {
-    public constructor(pos : Vector2, variant : number = 0)
+    public constructor(level : Level, pos : Vector2, variant : number = 0)
     {
-        super(pos, variant);
+        super(level, pos, variant);
     }
 
-    public override render(context : C2D) : void
+    public override render() : void
     {
         switch (this.variant) {
             case 0:
@@ -21,6 +24,6 @@ export default class CrackedGround extends Ground
                 break;
         }
 
-        C2D.drawImage(context, this.img, this.sPos, this.sSize.clone().sub(new Vector2(1.0, 0.0)), this.pos, this.size);
+        C2D.drawImage(this.level.context, this.img, this.sPos, this.sSize.clone().sub(new Vector2(1.0, 0.0)), this.pos, this.size);
     }
 }

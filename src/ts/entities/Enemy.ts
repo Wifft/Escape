@@ -1,7 +1,8 @@
 import { Vector2 } from "@math.gl/core";
 
-import Level from "../Level";
 import Collider from "../phys/Collider";
+
+import Level from "../Level";
 
 import Entity from "./Entity";
 import Player from "./Player";
@@ -14,13 +15,15 @@ export default abstract class Enemy extends Entity
 
     public moving : boolean = false;
 
-    public constructor(level : Level, sPos : Vector2, pos : Vector2, size : Vector2)
+    public constructor(level : Level, sPos : Vector2, pos : Vector2)
     {        
-        super(level, sPos, size.clone().divideScalar(2.0), pos, size);
+        super(level, sPos, pos);
     }
 
     protected tick() : void
     {
+        if (this.health <= 0) this.level.remove(this);
+        
         this.hurtsPlayer();
     }
 
@@ -34,9 +37,9 @@ export default abstract class Enemy extends Entity
 
     protected hurtsPlayer() : void
     {
-        for (const renderable of this.level.getAllRenderables()) {
-            if (renderable instanceof Player && Collider.intersects(this, renderable as any)) renderable.alive = false;
-        }
+        const player : Player = this.level.getPlayer();
+
+        if (Collider.intersects(this, player as any)) player.getDamage();
     }
 
     protected tryMove() : void

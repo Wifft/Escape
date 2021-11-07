@@ -34,7 +34,7 @@ export default class Bitmap {
     {
         const src : Response = await fetch(this.uri);
         const blob : Blob = await src.blob();
-        const file : File = new File([blob], 'bitmap.png', blob);
+        const file : File = new File([blob], 'level.png', blob);
 
         return file;
     }
