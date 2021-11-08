@@ -18,9 +18,15 @@ export default class CrackedBrick extends Brick
         switch (this.variant) {
             case 0:
                 this.sPos = new Vector2(64.0, 0.0);
+
                 break;
             case 1:
                 this.sPos = new Vector2(96.0, 0.0);
+                
+                break;
+            case 2:
+                this.sPos = new Vector2(128.0, 0.0);
+                
                 break;
         }
 

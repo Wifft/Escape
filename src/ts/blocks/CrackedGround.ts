@@ -18,9 +18,15 @@ export default class CrackedGround extends Ground
         switch (this.variant) {
             case 0:
                 this.sPos = new Vector2(80.0, 0.0);
+            
                 break;
             case 1:
                 this.sPos = new Vector2(112.0, 0.0);
+            
+                break;
+            case 2:
+                this.sPos = new Vector2(144.0, 0.0);
+            
                 break;
         }
 

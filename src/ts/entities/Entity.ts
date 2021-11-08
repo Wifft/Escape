@@ -44,8 +44,7 @@ export default abstract class Entity implements Renderable
     protected isColliding() : boolean
     {
         for (const collidable of this.level.getAllCollidables()) {
-            const colliding : string|null = Collider.checkCollision(this, collidable);
-            if (colliding !== null) return true;
+            if (Collider.checkCollision(this, collidable) !== null) return true;
         }
 
         return false;

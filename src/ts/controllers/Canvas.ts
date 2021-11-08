@@ -1,3 +1,4 @@
+import { isThrowStatement } from "typescript";
 import C2D from "../helpers/C2D";
 
 export default abstract class Canvas {
@@ -19,5 +20,12 @@ export default abstract class Canvas {
         if (context === null) throw "Your browser don't support canvas :(";
  
         return context;
+    }
+
+    protected lockMousePointer() : void
+    {
+        const canvas : HTMLCanvasElement = this.getInstance().canvas; 
+
+        document.onclick = (e : MouseEvent) => canvas.requestPointerLock();
     }
 }

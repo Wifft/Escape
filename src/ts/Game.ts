@@ -5,7 +5,6 @@ import Runnable from "./interfaces/Runnable";
 import Canvas from "./controllers/Canvas";
 
 import GameScreen from "./screens/GameScreen";
-import DeathScreen from "./screens/DeathScreen";
 
 class Game extends Canvas implements Runnable {
     private context : C2D;
@@ -34,6 +33,8 @@ class Game extends Canvas implements Runnable {
 
         this.gameScreen.init();
 
+        this.lockMousePointer();
+
         window.requestAnimationFrame(() : void => this.tick());
     }
 
@@ -55,7 +56,6 @@ class Game extends Canvas implements Runnable {
         this.render();
 
         if (!this.gameScreen.playerDead) window.requestAnimationFrame(() : void => this.tick());
-        else if (this.gameScreen.playerDead) new DeathScreen(this.context).render();
     }
 
     private render() : void

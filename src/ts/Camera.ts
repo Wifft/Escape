@@ -60,12 +60,25 @@ export default class Camera
             {
                 "spawnPoint": new Vector2(Level.OFFSET * 9, Level.OFFSET),
                 "escapePoint": [
-                    new Vector2(Level.OFFSET * 21, 496.0),
-                    new Vector2(Level.OFFSET * 22, 496.0),
-                    new Vector2(Level.OFFSET * 23, 496.0),
-                    new Vector2(Level.OFFSET * 24, 496.0)
+                    new Vector2(Level.OFFSET * 8, 496.0),
+                    new Vector2(Level.OFFSET * 9, 496.0),
+                    new Vector2(Level.OFFSET * 10, 496.0),
+                    new Vector2(Level.OFFSET * 11, 496.0),
+                    new Vector2(Level.OFFSET * 12, 496.0),
+                    new Vector2(Level.OFFSET * 13, 496.0),
+                    new Vector2(Level.OFFSET * 14, 496.0)
                 ],
                 "bitmapPos": new Vector2(75.0, 16.0)
+            },
+            {
+                "spawnPoint": new Vector2(Level.OFFSET * 13, Level.OFFSET),
+                "escapePoint": new Vector2(784.0, 368.0),
+                "bitmapPos": new Vector2(0.0, 32.0)
+            },
+            {
+                "spawnPoint": new Vector2(Level.OFFSET, 368.0),
+                "escapePoint": new Vector2(784.0, 368.0),
+                "bitmapPos": new Vector2(25.0, 32.0)
             }
         ];
     }

@@ -1,17 +1,14 @@
 import { Vector2 } from "@math.gl/core";
-import Collidable from "../interfaces/Collidable";
-
-import Renderable from "../interfaces/Renderable";
 
 import Level from "../Level";
 import Collider from "../phys/Collider";
-import Enemy from "./Enemy";
 
+import Enemy from "./Enemy";
 import Entity from "./Entity";
 import Player from "./Player";
 
 export default class Bullet extends Entity {
-    public override size : Vector2 = new Vector2(16.0, 16.0);
+    public override size : Vector2 = new Vector2(12.0, 12.0);
 
     public speed : number;
     
@@ -30,6 +27,15 @@ export default class Bullet extends Entity {
 
     public render() : void
     {
+       this.tick();
+
+        if (this.source instanceof Player) this.sPos.x = (Level.OFFSET / 2) * 12;
+        
+        super.render();
+    }
+
+    private tick() : void
+    {
         if (!super.isInChunk() || (super.intersects() && this.source instanceof Player)) this.level.remove(this);
         else if (this.source instanceof Player) {
             for (const renderable of this.level.getAllRenderables()) {
@@ -39,16 +45,21 @@ export default class Bullet extends Entity {
                     this.level.remove(this);
                 }
             }
-        }
-        else if (!(this.source instanceof Player)) {
+        } else if (!(this.source instanceof Player)) {
             const player : Player = this.level.getPlayer();
 
-            if (Collider.intersects(this, player as any)) {
+            if (Collider.intersects(player, this as any)) {
                 player.getDamage();
+
                 this.level.remove(this);
             }
         }
 
+        this.setDirection(this.direction);
+    }
+
+    private setDirection(direction : number|null) : void
+    {
         switch(this.direction) {
             case 0:
                 this.pos.x -= this.speed;
@@ -79,7 +90,5 @@ export default class Bullet extends Entity {
 
                 break;
         }
-        
-        super.render();
     }
 }

@@ -23,6 +23,7 @@ import Pixel from "./Pixel";
 import Camera from "./Camera";
 import { Hearth } from "./items/Hearth";
 import { Gun } from "./items/Gun";
+import Entrenched from "./entities/Entrenched";
 
 export default class Level
 {
@@ -30,7 +31,7 @@ export default class Level
 
     public context : C2D;
 
-    public currentChunk : number = 0;
+    public currentChunk : number = 9;
     public chunksData : Array<ChunkData> = Camera.getAllChunks();
 
     private renderables = new Array<Renderable>();
@@ -90,6 +91,10 @@ export default class Level
                                 this.add(new CrackedBrick(this, p.pos, 1));
 
                                 break;
+                            case 0xcc0000ff:
+                                this.add(new CrackedBrick(this, p.pos, 2));
+
+                                break;
                             case 0x008000ff:
                                 this.add(new Ground(this, p.pos));
 
@@ -104,6 +109,10 @@ export default class Level
                                 break;
                             case 0xe9cd07ff:
                                 this.add(new CrackedGround(this, p.pos, 1));
+
+                                break;
+                            case 0x000fccff:
+                                this.add(new CrackedGround(this, p.pos, 2));
 
                                 break;
                             case 0xa349a4ff:
@@ -124,6 +133,14 @@ export default class Level
                                 break;
                             case 0xa4fe1dff:
                                 this.add(new Womba(this, new Vector2(16.0 * 6, 0.0), p.pos, 1));
+                                
+                                break;
+                            case 0xa4fe1eff:
+                                this.add(new Womba(this, new Vector2(16.0 * 6, 0.0), p.pos, 2));
+                                
+                                break;
+                            case 0x400000ff:
+                                this.add(new Entrenched(this, new Vector2(16.0 * 8, 0.0), p.pos));
                                 
                                 break;
                             case 0x8a0b11ff:

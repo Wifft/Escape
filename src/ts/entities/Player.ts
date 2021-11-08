@@ -20,7 +20,6 @@ import SpriteSheet from "../SpriteSheet";
 
 import Bullet from "./Bullet";
 import Entity from "./Entity";
-import Enemy from "./Enemy";
 
 export default class Player extends Entity {
     public override size : Vector2 = new Vector2(GameScreen.SCALE, GameScreen.SCALE + (GameScreen.SCALE / 2));
@@ -36,19 +35,20 @@ export default class Player extends Entity {
     public grounded : boolean = true;
     public hurted : boolean = false;
     public shooting : boolean = false;
-    public hasGun : boolean = false;
+    public hasGun : boolean = true;
 
     public alive : boolean = true;
 
     public movingLeft : boolean = false;
     public movingRight : boolean = false;
-    
+
     public speed : Vector2 = new Vector2(0.50, 0.60);
     public speedA : Vector2;
     
     private keysDown : Array<boolean> = new Array<boolean>();
 
     private posA : Vector2 = new Vector2();
+    //private healthA;
 
     public constructor(level : Level, sPos : Vector2,  pos : Vector2)
     {
@@ -58,6 +58,7 @@ export default class Player extends Entity {
         this.img = this.spriteSheet.load();
 
         this.speedA = this.speed.clone();
+        //this.healthA = this.health;
 
         window.onkeydown = (e : KeyboardEvent) => this.onKeyDown(e);
         window.onkeyup = (e : KeyboardEvent) => this.onKeyUp(e);
@@ -78,15 +79,6 @@ export default class Player extends Entity {
         else if (this.hasGun) this.sPos = new Vector2(spritePos, this.size.y * 2);
         else if (this.hurted && this.hasGun) this.sPos = new Vector2(spritePos, this.size.y * 3);
         
-        if (!this.alive) {
-            spritePos = GameScreen.SCALE * 6;
-
-            this.size = new Vector2(this.size.y, GameScreen.SCALE - 8.0);
-            
-            this.sPos = new Vector2(spritePos, this.direction === 0 ? 24.0 : 0.0);
-            this.sSize = this.size;
-        }
-        
         this.sSize = this.size;
 
         C2D.drawImage(this.level.context, this.img, this.sPos, this.sSize, this.pos, this.size);
@@ -94,9 +86,17 @@ export default class Player extends Entity {
 
     public tick() : void
     {
-        if (this.health === 0.0) this.alive = false;
-
         this.keyboardMove();
+
+        if (this.health <= 0) this.alive = false;       
+        if (!this.alive) {
+            this.level.refresh();
+    
+            this.pos = this.level.chunksData[this.level.currentChunk].spawnPoint.clone();
+
+            this.alive = true;
+            this.health = 3.0;
+        }
 
         const canvas : HTMLCanvasElement = this.level.context.canvas as HTMLCanvasElement;
 
@@ -105,8 +105,6 @@ export default class Player extends Entity {
         const min : Vector2 = new Vector2(offset, offset);
         const max : Vector2 = new Vector2(canvas.width - offset, canvas.height - offset);
      
-        console.log(this.pos);
-
         const currentChunkData : ChunkData = this.level.chunksData[this.level.currentChunk];
 
         if (Array.isArray(currentChunkData.escapePoint) && !(currentChunkData.escapePoint instanceof Vector2)) {
@@ -127,7 +125,7 @@ export default class Player extends Entity {
             const dir : string|null = Collider.checkCollision(this, collidable);
 
             if (dir !== null) {
-                if (collidable instanceof Gear) this.getDamage();
+                if (collidable instanceof Gear) this.alive = false;
                 
                 switch (dir) {
                     case "b":
@@ -165,12 +163,17 @@ export default class Player extends Entity {
         this.hurted = true;
 
         this.health--;
-        
-        this.level.refresh();
 
-        this.pos = this.level.chunksData[this.level.currentChunk].spawnPoint.clone();
+        //if (this.health === this.healthA) this.health--;
+        //else this.healthA = this.health;
 
-        setTimeout(() => this.hurted = false, 1000 / 4);
+        // const knocback : number = this.speed.x * 4;
+        // if (face === 'r') this.pos.x += knocback;
+        // else if (face === 't') this.pos.y -= knocback;
+        // else if (face === 'l') this.pos.x -= knocback;
+        // else if (face === 'b') this.pos.y += knocback;
+
+        setTimeout(() => this.hurted = false, 1000 / 2);
     }
 
     private keyboardMove() : void
@@ -230,7 +233,10 @@ export default class Player extends Entity {
     private goToNextChunk() : void
     {
         this.level.currentChunk++;
+
         this.pos = this.level.chunksData[this.level.currentChunk].spawnPoint.clone();
+        this.health++;
+
         this.level.refresh();
     }
 

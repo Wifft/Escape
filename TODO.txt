@@ -5,7 +5,8 @@ Done:
 - Hurt animation
 - Item gathering
 - Kill enemies
+- Entrenched mob
 
 ToDo:
 - Chiseled blocks
-- Entrenched mob
+
