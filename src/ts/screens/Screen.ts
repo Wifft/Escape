@@ -1,4 +1,5 @@
 import C2D from "../helpers/C2D";
+import GameScreen from "./GameScreen";
 
 export default abstract class Screen {
     protected context : C2D;
@@ -8,5 +9,5 @@ export default abstract class Screen {
         this.context = context;
     }
 
-    public abstract render() : void;
+    public abstract render(gameScreen? : GameScreen) : void;
 }

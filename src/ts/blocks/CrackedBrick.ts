@@ -30,6 +30,6 @@ export default class CrackedBrick extends Brick
                 break;
         }
 
-        C2D.drawImage(this.level.context, this.img, this.sPos, this.sSize.clone().sub(new Vector2(1.0, 0.0)), this.pos, this.size);;
+        C2D.drawImage(this.level.context, this.img, this.sPos, this.sSize, this.pos, this.size);
     }
 }

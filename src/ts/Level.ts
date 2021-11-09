@@ -24,6 +24,8 @@ import Camera from "./Camera";
 import { Hearth } from "./items/Hearth";
 import { Gun } from "./items/Gun";
 import Entrenched from "./entities/Entrenched";
+import ChiseledBrick from "./blocks/ChiseledBrick";
+import ChiseledGround from "./blocks/ChiseledGround";
 
 export default class Level
 {
@@ -31,7 +33,7 @@ export default class Level
 
     public context : C2D;
 
-    public currentChunk : number = 9;
+    public currentChunk : number = 15;
     public chunksData : Array<ChunkData> = Camera.getAllChunks();
 
     private renderables = new Array<Renderable>();
@@ -81,7 +83,7 @@ export default class Level
                                 break;
                             case 0x408080ff:
                                 this.add(new Brick(this, p.pos, 1));
-
+                                
                                 break;
                             case 0x8ef2f2ff:
                                 this.add(new CrackedBrick(this, p.pos));
@@ -95,6 +97,14 @@ export default class Level
                                 this.add(new CrackedBrick(this, p.pos, 2));
 
                                 break;
+                            case 0xff8040ff:
+                                this.add(new ChiseledBrick(this, p.pos));
+
+                                break; 
+                            case 0xffaec9ff:
+                                this.add(new ChiseledBrick(this, p.pos, 1));
+
+                                break; 
                             case 0x008000ff:
                                 this.add(new Ground(this, p.pos));
 
@@ -113,6 +123,14 @@ export default class Level
                                 break;
                             case 0x000fccff:
                                 this.add(new CrackedGround(this, p.pos, 2));
+
+                                break;
+                            case 0x80ffffff:
+                                this.add(new ChiseledGround(this, p.pos));
+
+                                break;
+                            case 0xe3d3c4ff:
+                                this.add(new ChiseledGround(this, p.pos, 1));
 
                                 break;
                             case 0xa349a4ff:

@@ -14,7 +14,7 @@ export default class GameScreen extends Screen {
     
     public playerDead : boolean = false;
     
-    private level : Level;
+    public level : Level;
     private player : Player|null = null;
 
     private timer : Timer = new Timer();
@@ -37,8 +37,9 @@ export default class GameScreen extends Screen {
 
     public tick() : void
     {
-        const player : Player = this.level.getPlayer() as Player;
-        player.tick();
+        const player : Player = this.level.getPlayer();
+        if (player.alive) player.tick();
+        else this.playerDead = true;
     }
 
     public override render() : void

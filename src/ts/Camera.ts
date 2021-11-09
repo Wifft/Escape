@@ -77,8 +77,70 @@ export default class Camera
             },
             {
                 "spawnPoint": new Vector2(Level.OFFSET, 368.0),
-                "escapePoint": new Vector2(784.0, 368.0),
+                "escapePoint": [
+                    new Vector2(Level.OFFSET * 21, 496.0),
+                    new Vector2(Level.OFFSET * 22, 496.0), 
+                    new Vector2(Level.OFFSET * 23, 496.0), 
+                ],
                 "bitmapPos": new Vector2(25.0, 32.0)
+            },
+            {
+                "spawnPoint": new Vector2(Level.OFFSET * 23, Level.OFFSET),
+                "escapePoint": new Vector2(784.0, 304.0),
+                "bitmapPos": new Vector2(50.0, 32.0)
+            },
+            {
+                "spawnPoint": new Vector2(Level.OFFSET / 2, 304.0),
+                "escapePoint": new Vector2(784.0, 80.0),
+                "bitmapPos": new Vector2(75.0, 32.0)
+            },
+            {
+                "spawnPoint": new Vector2(Level.OFFSET / 2, 80.0),
+                "escapePoint": new Vector2(784.0, 368.0),
+                "bitmapPos": new Vector2(0.0, 48.0)
+            },
+            {
+                "spawnPoint": new Vector2(Level.OFFSET / 2, 368.0),
+                "escapePoint": [
+                    new Vector2(Level.OFFSET * 13, 496.0),
+                    new Vector2(Level.OFFSET * 14, 496.0),
+                    new Vector2(Level.OFFSET * 15, 496.0),
+                    new Vector2(Level.OFFSET * 16, 496.0),
+                    new Vector2(Level.OFFSET * 17, 496.0),
+                    new Vector2(Level.OFFSET * 18, 496.0),
+                    new Vector2(Level.OFFSET * 19, 496.0),
+                    new Vector2(Level.OFFSET * 20, 496.0),
+                    new Vector2(Level.OFFSET * 21, 496.0)
+                ],
+                "bitmapPos": new Vector2(25.0, 48.0)
+            },
+            {
+                "spawnPoint": new Vector2(Level.OFFSET * 15, Level.OFFSET),
+                "escapePoint": [
+                    new Vector2(Level.OFFSET * 9, 496.0),
+                    new Vector2(Level.OFFSET * 10, 496.0),
+                    new Vector2(Level.OFFSET * 11, 496.0),
+                    new Vector2(Level.OFFSET * 12, 496.0),
+                    new Vector2(Level.OFFSET * 13, 496.0),
+                    new Vector2(Level.OFFSET * 14, 496.0),
+                    new Vector2(Level.OFFSET * 15, 496.0),
+                    new Vector2(Level.OFFSET * 16, 496.0),
+                    new Vector2(Level.OFFSET * 17, 496.0),
+                    new Vector2(Level.OFFSET * 18, 496.0)
+                ],
+                "bitmapPos": new Vector2(50.0, 48.0)
+            },
+            {
+                "spawnPoint": new Vector2(Level.OFFSET * 14, Level.OFFSET),
+                "escapePoint": [
+                    new Vector2(Level.OFFSET * 7, 496.0),
+                    new Vector2(Level.OFFSET * 8, 496.0),
+                    new Vector2(Level.OFFSET * 9, 496.0),
+                    new Vector2(Level.OFFSET * 17, 496.0),
+                    new Vector2(Level.OFFSET * 18, 496.0),
+                    new Vector2(Level.OFFSET * 19, 496.0)
+                ],
+                "bitmapPos": new Vector2(75.0, 48.0)
             }
         ];
     }

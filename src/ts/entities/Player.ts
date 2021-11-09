@@ -28,6 +28,8 @@ export default class Player extends Entity {
     public override spriteSheet : SpriteSheet = new SpriteSheet('../assets/img/player.png');
     public override img : HTMLImageElement;
 
+    public override health : number = 18;
+
     public override direction : number|null = null;
 
     public jumping : boolean = false;
@@ -86,8 +88,6 @@ export default class Player extends Entity {
 
     public tick() : void
     {
-        this.keyboardMove();
-
         if (this.health <= 0) this.alive = false;       
         if (!this.alive) {
             this.level.refresh();
@@ -95,8 +95,11 @@ export default class Player extends Entity {
             this.pos = this.level.chunksData[this.level.currentChunk].spawnPoint.clone();
 
             this.alive = true;
-            this.health = 3.0;
+            this.health = 10.0;
         }
+        
+        this.keyboardMove();
+
 
         const canvas : HTMLCanvasElement = this.level.context.canvas as HTMLCanvasElement;
 
@@ -233,6 +236,8 @@ export default class Player extends Entity {
     private goToNextChunk() : void
     {
         this.level.currentChunk++;
+
+        console.log(this.level.currentChunk);
 
         this.pos = this.level.chunksData[this.level.currentChunk].spawnPoint.clone();
         this.health++;
