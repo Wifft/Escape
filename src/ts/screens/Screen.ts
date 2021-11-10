@@ -9,5 +9,5 @@ export default abstract class Screen {
         this.context = context;
     }
 
-    public abstract render(gameScreen? : GameScreen) : void;
+    public abstract render() : void;
 }

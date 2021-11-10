@@ -28,7 +28,7 @@ export default class Player extends Entity {
     public override spriteSheet : SpriteSheet = new SpriteSheet('../assets/img/player.png');
     public override img : HTMLImageElement;
 
-    public override health : number = 18;
+    public override health : number = 50;
 
     public override direction : number|null = null;
 
@@ -37,7 +37,7 @@ export default class Player extends Entity {
     public grounded : boolean = true;
     public hurted : boolean = false;
     public shooting : boolean = false;
-    public hasGun : boolean = true;
+    public hasGun : boolean = false;
 
     public alive : boolean = true;
 
@@ -50,7 +50,6 @@ export default class Player extends Entity {
     private keysDown : Array<boolean> = new Array<boolean>();
 
     private posA : Vector2 = new Vector2();
-    //private healthA;
 
     public constructor(level : Level, sPos : Vector2,  pos : Vector2)
     {
@@ -60,7 +59,6 @@ export default class Player extends Entity {
         this.img = this.spriteSheet.load();
 
         this.speedA = this.speed.clone();
-        //this.healthA = this.health;
 
         window.onkeydown = (e : KeyboardEvent) => this.onKeyDown(e);
         window.onkeyup = (e : KeyboardEvent) => this.onKeyUp(e);
@@ -69,18 +67,21 @@ export default class Player extends Entity {
     public override render() : void
     {
         let spritePos : number = 0.0;
+        
+        this.sPos = new Vector2(192.0, 48.0);
+        if (this.alive) {
+            if (this.jumping || this.falling) spritePos = GameScreen.SCALE * 1;
+            else if (this.movingRight) spritePos = GameScreen.SCALE * 2;
+            else if (this.movingLeft) spritePos = GameScreen.SCALE * 3;
+            else if (this.direction === 0) spritePos = GameScreen.SCALE * 5;
+            else if (this.direction === 1) spritePos = GameScreen.SCALE * 4;
+            
+            this.sPos = new Vector2(spritePos, 0.0);
+            if (this.hurted) this.sPos = new Vector2(spritePos, this.size.y);
+            else if (this.hasGun) this.sPos = new Vector2(spritePos, this.size.y * 2);
+            else if (this.hurted && this.hasGun) this.sPos = new Vector2(spritePos, this.size.y * 3);
+        }
 
-        if (this.jumping || this.falling) spritePos = GameScreen.SCALE * 1;
-        else if (this.movingRight) spritePos = GameScreen.SCALE * 2;
-        else if (this.movingLeft) spritePos = GameScreen.SCALE * 3;
-        else if (this.direction === 0) spritePos = GameScreen.SCALE * 5;
-        else if (this.direction === 1) spritePos = GameScreen.SCALE * 4;
-        
-        this.sPos = new Vector2(spritePos, 0.0);
-        if (this.hurted) this.sPos = new Vector2(spritePos, this.size.y);
-        else if (this.hasGun) this.sPos = new Vector2(spritePos, this.size.y * 2);
-        else if (this.hurted && this.hasGun) this.sPos = new Vector2(spritePos, this.size.y * 3);
-        
         this.sSize = this.size;
 
         C2D.drawImage(this.level.context, this.img, this.sPos, this.sSize, this.pos, this.size);
@@ -89,17 +90,8 @@ export default class Player extends Entity {
     public tick() : void
     {
         if (this.health <= 0) this.alive = false;       
-        if (!this.alive) {
-            this.level.refresh();
-    
-            this.pos = this.level.chunksData[this.level.currentChunk].spawnPoint.clone();
-
-            this.alive = true;
-            this.health = 10.0;
-        }
         
         this.keyboardMove();
-
 
         const canvas : HTMLCanvasElement = this.level.context.canvas as HTMLCanvasElement;
 
@@ -167,15 +159,6 @@ export default class Player extends Entity {
 
         this.health--;
 
-        //if (this.health === this.healthA) this.health--;
-        //else this.healthA = this.health;
-
-        // const knocback : number = this.speed.x * 4;
-        // if (face === 'r') this.pos.x += knocback;
-        // else if (face === 't') this.pos.y -= knocback;
-        // else if (face === 'l') this.pos.x -= knocback;
-        // else if (face === 'b') this.pos.y += knocback;
-
         setTimeout(() => this.hurted = false, 1000 / 2);
     }
 
@@ -237,10 +220,7 @@ export default class Player extends Entity {
     {
         this.level.currentChunk++;
 
-        console.log(this.level.currentChunk);
-
         this.pos = this.level.chunksData[this.level.currentChunk].spawnPoint.clone();
-        this.health++;
 
         this.level.refresh();
     }

@@ -28,4 +28,10 @@ export default abstract class Canvas {
 
         document.onclick = (e : MouseEvent) => canvas.requestPointerLock();
     }
+
+    public static sleep(delay : number) : void
+    {
+        const start : number = new Date().getTime();
+        while(new Date().getTime() < start + delay);
+    }
 }

@@ -33,7 +33,7 @@ export default class Level
 
     public context : C2D;
 
-    public currentChunk : number = 15;
+    public currentChunk : number = 0;
     public chunksData : Array<ChunkData> = Camera.getAllChunks();
 
     private renderables = new Array<Renderable>();

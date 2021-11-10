@@ -9,14 +9,14 @@ export default class Timer
     public lastTime : number = new Date().getTime();
     public numSeconds : number = 0;
 
-    public render(context : C2D) : void
+    public render(context : C2D, stop : boolean) : void
     {
         const canvas : HTMLCanvasElement = context.canvas;
 
         const currentTime : number = new Date().getTime();
         if (currentTime - this.lastTime >= 1000) {
             this.lastTime = currentTime;
-            this.numSeconds++;
+            if (!stop) this.numSeconds++;
         }
 
         const pos : Vector2 = new Vector2((canvas.width / 2.0) - Level.OFFSET, Level.OFFSET / 2.0);

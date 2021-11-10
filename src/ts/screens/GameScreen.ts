@@ -14,10 +14,12 @@ export default class GameScreen extends Screen {
     
     public playerDead : boolean = false;
     
-    public level : Level;
+    private level : Level;
     private player : Player|null = null;
 
     private timer : Timer = new Timer();
+
+    private deathTimeout : number = 1.000;    
 
     public constructor(context : C2D)
     {
@@ -37,15 +39,29 @@ export default class GameScreen extends Screen {
 
     public tick() : void
     {
-        const player : Player = this.level.getPlayer();
+        const player : Player = this.level.getPlayer() as Player;
+
+        if (!player.alive) {
+            this.deathTimeout -= 0.0008; 
+            if (this.deathTimeout <= 0)  {
+                this.level.refresh();
+    
+                player.pos = this.level.chunksData[this.level.currentChunk].spawnPoint.clone();
+                
+                player.alive = true;
+                player.health = 25.0;
+    
+                this.deathTimeout = 1.000;
+            }
+        }
+
         if (player.alive) player.tick();
-        else this.playerDead = true;
     }
 
     public override render() : void
     {   
         this.level.render();
-        this.timer.render(this.context);
+        this.timer.render(this.context, this.level.currentChunk === 25);
     }
 
     private summonPlayer() : Player
