@@ -7,10 +7,11 @@ import Canvas from "./controllers/Canvas";
 import GameScreen from "./screens/GameScreen";
 
 class Game extends Canvas implements Runnable {
+    private static readonly MAX_FPS = 60.0;
+    
     private context : C2D;
 
-    private lastTime : number = new Date().getTime();
-    private unprocessedFrames : number  = 0.0;
+    private then : number = performance.now();
 
     private gameScreen : GameScreen;
 
@@ -35,27 +36,27 @@ class Game extends Canvas implements Runnable {
 
         this.lockMousePointer();
 
-        window.requestAnimationFrame(() : void => this.tick());
+        window.requestAnimationFrame((time : number) : void => this.tick(time));
     }
 
-    public tick() : void
+    public tick(now : number) : void
     {
         C2D.clearRect(this.context, this.width, this.height);
 
-        const now : number = new Date().getTime();
+        const interval : number = 1000 / Game.MAX_FPS;
+        const tolerance : number = 0.1;
+        
+        const delta : number = now - this.then;
 
-        this.unprocessedFrames += (now - this.lastTime) * 60 * 1000; //60 fps
+        if (delta >= interval - tolerance) {
+            this.then = now - (delta % interval);
 
-        if (this.unprocessedFrames > 10.0) this.unprocessedFrames = 10.0;
-        while (this.unprocessedFrames > 1.0) {
             this.gameScreen.tick();
-
-            this.unprocessedFrames--;
+            
+            this.render();
         }
-
-        this.render();
-
-        if (!this.gameScreen.playerDead) window.requestAnimationFrame(() : void => this.tick());
+        
+        if (!this.gameScreen.playerDead) window.requestAnimationFrame((time : number) : void => this.tick(time));
     }
 
     private render() : void

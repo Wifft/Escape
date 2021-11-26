@@ -76,6 +76,8 @@ export default class Level
             () : void => {
                 this.pixels.forEach(
                     (p : Pixel) : void => {
+                        console.log(this.pixels);
+
                         switch (p.colorHex) {
                             case 0xff0000ff:
                                 this.add(new Brick(this, p.pos));

@@ -1,4 +1,4 @@
 export default interface Runnable {
     run() : void
-    tick() : void
+    tick(time : number) : void
 }

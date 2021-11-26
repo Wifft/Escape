@@ -44,7 +44,7 @@ export default class Player extends Entity {
     public movingLeft : boolean = false;
     public movingRight : boolean = false;
 
-    public speed : Vector2 = new Vector2(0.50, 0.60);
+    public speed : Vector2 = new Vector2(5.0, 6.0);
     public speedA : Vector2;
     
     private keysDown : Array<boolean> = new Array<boolean>();
@@ -113,7 +113,6 @@ export default class Player extends Entity {
 
         if (this.pos.x < min.x) this.pos.x = min.x;
         if (this.pos.x > max.x) this.pos.x = max.x;
-        if (this.pos.y < min.y) this.pos.y = min.y;
         if (this.pos.y > max.y) this.pos.y = max.y;
         
         for (const collidable of this.level.getAllCollidables()) {
@@ -213,7 +212,7 @@ export default class Player extends Entity {
     {
         this.shooting = true;
 
-        this.level.add(new Bullet(this.level, this.pos.clone(), this.speed.x, this.direction as number, this));
+        this.level.add(new Bullet(this.level, this.pos.clone(), 0.5, this.direction as number, this));
     }
 
     private goToNextChunk() : void

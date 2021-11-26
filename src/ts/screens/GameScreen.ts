@@ -42,7 +42,7 @@ export default class GameScreen extends Screen {
         const player : Player = this.level.getPlayer() as Player;
 
         if (!player.alive) {
-            this.deathTimeout -= 0.0008; 
+            this.deathTimeout -= 0.03; 
             if (this.deathTimeout <= 0)  {
                 this.level.refresh();
     
